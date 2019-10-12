@@ -1,0 +1,42 @@
+﻿<Window x:Class="LLA.GUI.Dialogs.Knowledge_testing.KnowledgeTest"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LLA.GUI.Dialogs.Knowledge_testing"
+      mc:Ignorable="d" 
+      Title="KnowledgeTest" SizeToContent="WidthAndHeight" MinWidth="400">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0" Content="UKR"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="Слово на українському"/>
+        <Label Grid.Column="1" Grid.Row="1" Content="(примітки)"/>
+
+        <Label Grid.Column="0" Grid.Row="2" Content="RUS"/>
+        <Label Grid.Column="1" Grid.Row="2" Content="Слово на русском"/>
+        <Label Grid.Column="1" Grid.Row="3" Content="(примечания)"/>
+
+        <Label Grid.Column="0" Grid.Row="5" Content="ENG"/>
+        <TextBox Grid.Column="1" Grid.Row="5" Text="Введите ответ"/>
+
+        <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="OK" MinWidth="100" Margin="10"/>
+            <Button Content="Cancel" MinWidth="100" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</Window>

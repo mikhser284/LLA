@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLA.Core", "LLA.Core\LLA.Core.csproj", "{7ABFF6E3-5B47-4AB9-B5CC-0226D60E4811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLA.GUI", "LLA.GUI\LLA.GUI.csproj", "{44B77093-111D-4B12-893B-EE64004C0CAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7ABFF6E3-5B47-4AB9-B5CC-0226D60E4811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ABFF6E3-5B47-4AB9-B5CC-0226D60E4811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ABFF6E3-5B47-4AB9-B5CC-0226D60E4811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABFF6E3-5B47-4AB9-B5CC-0226D60E4811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B77093-111D-4B12-893B-EE64004C0CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B77093-111D-4B12-893B-EE64004C0CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B77093-111D-4B12-893B-EE64004C0CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B77093-111D-4B12-893B-EE64004C0CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5EBD526B-3B4A-4955-903A-CF1FDE36E142}
+	EndGlobalSection
+EndGlobal
