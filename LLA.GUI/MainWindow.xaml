@@ -99,14 +99,20 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Урок" Binding="{Binding Path=IndexA_Lesson}"/>
-                <DataGridTextColumn Header="№ п.п." Binding="{Binding Path=IndexB_Order}"/>                              
-                <DataGridTextColumn Header="UKR" Binding="{Binding Path=Word_Ukr}"/>
-                <DataGridTextColumn Header="UKR (примечания)" Binding="{Binding Path=Word_UkrRemarks}"/>
-                <DataGridTextColumn Header="ENG" Binding="{Binding Path=Word_Eng}"/>
-                <DataGridTextColumn Header="ENG (pronounciation)" Binding="{Binding Path=Word_EngSpeling}"/>
-                <DataGridTextColumn Header="RUS" Binding="{Binding Path=Word_Rus}"/>
-                <DataGridTextColumn Header="RUS (примечания)" Binding="{Binding Path=Word_RusRemarks}"/>
+                <DataGridTextColumn Header="Урок" Binding="{Binding Path=LessonNumber}"/>
+                <DataGridTextColumn Header="№ п.п." Binding="{Binding Path=WordOrder}"/>
+                
+                <DataGridTextColumn Header="ENG" Binding="{Binding Path=WritingEng}"/>
+                <DataGridTextColumn Header="Произношение" Binding="{Binding Path=Speling}"/>
+                
+                <DataGridTextColumn Header="UKR" Binding="{Binding Path=WritingUkr}"/>
+                <DataGridTextColumn Header="UKR (примечания)" Binding="{Binding Path=RemarksUkr}"/>
+                <DataGridTextColumn Header="Произношение по UKR" Binding="{Binding Path=SpelingByUkr}"/>
+                
+                <DataGridTextColumn Header="RUS" Binding="{Binding Path=WritingRus}"/>
+                <DataGridTextColumn Header="RUS (примечания)" Binding="{Binding Path=RemarkssRus}"/>
+                <DataGridTextColumn Header="Произношение по RUS" Binding="{Binding Path=SpelingByRus}"/>
+                
                 <DataGridCheckBoxColumn Header="Изучать" />
                 <DataGridTemplateColumn Header="Запланироно на">
                     <DataGridTemplateColumn.CellTemplate>
@@ -123,6 +129,7 @@
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
+                    <MenuItem Header="Добавить..."  Command="commands:Commands_WordsDatagrid.AddNewItem" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>
                     <MenuItem Header="Удалить"/>
                     <Separator/>
                     <MenuItem Header="Вставить над" Command="ApplicationCommands.Paste" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>

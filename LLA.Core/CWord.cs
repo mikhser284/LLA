@@ -46,47 +46,40 @@ namespace LLA.Core
         public DateTime CreatedAt { get; set; }
 
         [JsonProperty("1", Order = 2)]
-        public Int32 IndexA_Lesson { get; set; }
+        public Int32 LessonNumber { get; set; }
 
         [JsonProperty("2", Order = 3)]
-        public Int32 IndexB_Order { get; set; }
+        public Int32 WordOrder { get; set; }
 
         [JsonProperty("3", Order = 4)]
-        public String Word_Eng { get; set; }
+        public String WritingEng { get; set; }
 
         [JsonProperty("4", Order = 5)]
-        public String Word_EngSpeling { get; set; }
+        public String Speling { get; set; }
+
 
         [JsonProperty("5", Order = 6)]
-        public String Word_Ukr { get; set; }
+        public String WritingUkr { get; set; }
 
         [JsonProperty("6", Order = 7)]
-        public String Word_UkrRemarks { get; set; }
+        public String RemarksUkr { get; set; }
 
         [JsonProperty("7", Order = 8)]
-        public String Word_Rus { get; set; }
+        public String WritingRus { get; set; }
 
         [JsonProperty("8", Order = 9)]
-        public String Word_RusRemarks { get; set; }
+        public String RemarkssRus { get; set; }
 
+        [JsonProperty("9", Order = 10)]
+        public String SpelingByUkr { get; set; }
+
+        [JsonProperty("10", Order = 11)]
+        public String SpelingByRus { get; set; }
 
 
         public CWord()
         {
             CreatedAt = DateTime.Now;
-        }
-
-        public CWord(Int32 indexA_Text, Int32 indexB_Order, String wordEng, String wordUkr, String wordUkrRemarks = null, String wordEngSpeling = null, String wordRus = null, String wordRusRemarks = null)
-        {
-            CreatedAt = DateTime.Now;
-            IndexA_Lesson = indexA_Text;
-            IndexB_Order = indexB_Order;
-            Word_Eng = wordEng;
-            Word_Ukr = wordUkr;
-            Word_UkrRemarks = wordUkrRemarks;
-            Word_EngSpeling = wordEngSpeling;
-            Word_Rus = wordRus;
-            Word_RusRemarks = wordRusRemarks;
         }
     }
 }

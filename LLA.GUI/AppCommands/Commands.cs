@@ -53,6 +53,11 @@ namespace LLA.GUI.AppCommands
                 , typeof(Commands_WordsDatagrid)
                 , new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control), } );
         
+        public static readonly RoutedCommand AddNewItem = new RoutedUICommand("Add new item"
+            , nameof(AddNewItem)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Insert, ModifierKeys.Control | ModifierKeys.Shift)}
+            );
     }
 
 

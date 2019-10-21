@@ -1,0 +1,89 @@
+﻿<Window x:Class="LLA.GUI.Dialogs.Words_Create"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LLA.GUI.Dialogs"
+        mc:Ignorable="d"
+        Title="Новый элемент" SizeToContent="WidthAndHeight" MinWidth="400" WindowStartupLocation="CenterOwner" ShowInTaskbar="True">
+
+    <StackPanel Grid.IsSharedSizeScope="True" FocusManager.FocusedElement="{Binding ElementName=Ctrl_EngWriting}">
+        <GroupBox Margin="3">
+            <GroupBox.Header>
+                <Label Content="ENG" Foreground="Red" FontWeight="Bold" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <TextBox Name="Ctrl_EngWriting" Grid.Column="1" Grid.Row="0" Margin="3" Text="{Binding Path=Word.Word_Eng}"/>
+                
+                <Label Grid.Column="0" Grid.Row="1" Content="Общепринятое произношение:"/>
+                <TextBox Name="Ctrl_EngSpeling" Grid.Column="1" Grid.Row="1" Margin="3"/>
+                
+                <Label Grid.Column="0" Grid.Row="2" Content="Произношение на UKR:"/>
+                <TextBox Name="Ctrl_EngSpelingByUkr" Grid.Column="1" Grid.Row="2" Margin="3"/>
+                
+                <Label Grid.Column="0" Grid.Row="3" Content="Произношение на RUS:"/>
+                <TextBox Name="Ctrl_EngSpelingByRus" Grid.Column="1" Grid.Row="3" Margin="3"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Margin="3">
+            <GroupBox.Header>
+                <Label Content="UKR" Foreground="DodgerBlue" FontWeight="Bold" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <TextBox Name="Ctrl_UrkWriting" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                
+                <Label Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
+                <TextBox x:Name="Ctrl_UkrRemarks" Grid.Column="1" Grid.Row="1" Margin="3"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Margin="3">
+            <GroupBox.Header>
+                <Label Content="RUS" Foreground="Green" FontWeight="Bold" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <TextBox Name="Ctrl_RusWriting" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                
+                <Label Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
+                <TextBox Name="Ctrl_RusRemarks" Grid.Column="1" Grid.Row="1" Margin="3"/>
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="OK" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
+            <Button Content="Cancel" MinWidth="100" Margin="10" IsCancel="True" Click="ButtonClick_Cancel"/>
+        </StackPanel>
+    </StackPanel>    
+</Window>

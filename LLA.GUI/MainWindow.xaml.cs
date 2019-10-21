@@ -24,14 +24,14 @@ using LLA.GUI.Dialogs;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO.Compression;
 
-//Dev branch
 namespace LLA.GUI
 {
     public partial class MainWindow : Window
     {
         public List<CWord> Words = new List<CWord>();
-        public String workingFile = String.Empty;
+        public String WorkingFile = String.Empty;
 
         public MainWindow()
         {
@@ -46,12 +46,34 @@ namespace LLA.GUI
             CommandBindings.Add(new CommandBinding(MediaCommands.BoostBass, CommandBinding_TableItems_InsertBelow));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Properties, CommandBinding_ShowDialog_Settings));
             CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.SpreadData, CommandBinding_WordsDatagrid_SpreadData));
-            //
-            Words = CreateWordsTestSet();
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.AddNewItem, CommandBinding_WordsDatagrid_AddNewItem));
+            //            
             ctrl_DataGrid_Words.ItemsSource = Words;
         }
 
 
+
+        private void CommandBinding_WordsDatagrid_AddNewItem(object sender, ExecutedRoutedEventArgs e)
+        {
+            //DataGrid ctrl = ctrl_DataGrid_Words;
+            //List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
+            //CWord firstSelectedItem = selItems.FirstOrDefault();
+            //DateTime startTime = firstSelectedItem.CreatedAt;
+            //Int32 secondsPerOneItem = 180;
+            //Int32 itemNo = 0;
+            //selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
+            //ctrl.Items.Refresh();
+            //return;
+
+            Words_Create newItemDialog = new Words_Create() { Owner = this };
+            if (newItemDialog.ShowDialog() != true) return;
+            DataGrid ctrl = ctrl_DataGrid_Words;
+            ctrl.ItemsSource = null;
+            CWord word = newItemDialog.Word;
+            word.CreatedAt = DateTime.Now;
+            Words.Add(word);
+            ctrl.ItemsSource = Words;
+        }
 
         private void CommandBinding_ShowDialog_Settings(object sender, ExecutedRoutedEventArgs e)
         {
@@ -89,16 +111,16 @@ namespace LLA.GUI
             Int32 selectedIndex = ctrl.SelectedIndex;
             if (selectedIndex >= 0)
             {
-                Int32 itemsSelected = ctrl_DataGrid_Words.SelectedItems.Count;
+                Int32 itemsSelected = ctrl.SelectedItems.Count;
                 Int32 indexOfLastItem = (selectedIndex + itemsSelected - 1);
                 indexOfLastItem = Math.Min(indexOfLastItem, Words.Count - 1);
-                Int32 lesson = Words[indexOfLastItem].IndexA_Lesson;
-                Int32 order = Words[indexOfLastItem].IndexB_Order;
+                Int32 lesson = Words[indexOfLastItem].LessonNumber;
+                Int32 order = Words[indexOfLastItem].WordOrder;
 
-                var newItems = itemsSelected.NewSet<CWord>(() => new CWord() { IndexA_Lesson = lesson, IndexB_Order = ++order });
-                ctrl_DataGrid_Words.ItemsSource = null;
+                var newItems = itemsSelected.NewSet<CWord>(() => new CWord() { LessonNumber = lesson, WordOrder = ++order });
+                ctrl.ItemsSource = null;
                 Words.InsertRange(indexOfLastItem + 1, newItems);
-                ctrl_DataGrid_Words.ItemsSource = Words;
+                ctrl.ItemsSource = Words;
             }
         }
 
@@ -112,11 +134,11 @@ namespace LLA.GUI
                 Int32 itemsSelected = ctrl_DataGrid_Words.SelectedItems.Count;
                 Int32 indexOfFirstItem = selectedIndex;
                 CWord word = Words[indexOfFirstItem];
-                Int32 lesson = word.IndexA_Lesson;
-                Int32 order = word.IndexB_Order;
+                Int32 lesson = word.LessonNumber;
+                Int32 order = word.WordOrder;
                 ctrl_DataGrid_Words.ItemsSource = null;
                 Int32 countOfSelItems = Math.Min(selectedIndex + itemsSelected, Words.Count) - selectedIndex;
-                Words.GetRange(selectedIndex, countOfSelItems).ForEach(x => { x.IndexA_Lesson = lesson; x.IndexB_Order = order++; });
+                Words.GetRange(selectedIndex, countOfSelItems).ForEach(x => { x.LessonNumber = lesson; x.WordOrder = order++; });
                 ctrl_DataGrid_Words.ItemsSource = Words;
             }
         }
@@ -142,36 +164,6 @@ namespace LLA.GUI
             this.Close();
         }
 
-        private List<CWord> CreateWordsTestSet()
-        {
-            List<CWord> words = new List<CWord>
-            {
-                new CWord( 12,  23, "strained",      "напружений; вимучений"),
-                new CWord( 08,  30, "cater",         "поставляти; враховувати; приймати до уваги"),
-                new CWord( 15,   1, "put up",        "миритись; знайомитись"),
-                new CWord( 12,  19, "impair",        "ослаблювати; знижувати; погіршувати"),
-                new CWord( 11,  12, "fairly",        "належним чином; досить; цілком"),
-                new CWord( 12,  10, "covet",         "домагатись; сильно бажати"),
-                new CWord(  8,  24, "contribute",    "вносити вклад"),
-                new CWord(  3,   3, "claim",         "стверджувати; вимагати"),
-                new CWord(  4,  75, "manifested",    "очевидний, доведений"),
-                new CWord( 12,  12, "deprive",       "відбирати; позбавляти"),
-                new CWord(  8,  49, "preservation",  "охрана; сохранность"),
-                new CWord( 16,   5, "buck",          "самець тварини",                              "(оленя, антилопи, зайця, тощо)"),
-                new CWord( 17,  20, "condiment",     "приправа; спеції"),
-                new CWord( 15,   2, "inevitably",    "неминуче"),
-                new CWord(  4,   8, "exquisite",     "вишуканий"),
-                new CWord( 12,  32, "desperate",     "безнадійний; відчайдушний"),
-                new CWord( 13,  09, "stove",         "пічка"),
-                new CWord( 13,  11, "starving",      "голодаючий"),
-                new CWord( 16,  15, "settle",        "приймати рішення"),
-                new CWord( 17,  21, "mustard",       "гірчиця"),
-                new CWord( 17,  33, "mild",          "м'який; негострий; не крепкий",               "(про їжу або напої)"),
-                new CWord( 18,   6, "bargain",       "договір; торгова угода"),
-                new CWord( 18,   7, "no doubt",      "безумовно"),
-            };
-            return words;
-        }
 
         private void OpenFiles(OpenFileDialog openFileDialog)
         {
@@ -207,7 +199,7 @@ namespace LLA.GUI
 
         private void CommandBinding_SaveFile(object sender, ExecutedRoutedEventArgs e)
         {
-            if (String.IsNullOrEmpty(workingFile))
+            if (String.IsNullOrEmpty(WorkingFile))
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog()
                 {
@@ -215,13 +207,25 @@ namespace LLA.GUI
                     AddExtension = true,
                 };
                 if (saveFileDialog.ShowDialog() != true) return;
-                workingFile = saveFileDialog.FileName;
+                WorkingFile = saveFileDialog.FileName;
             }
-            using (StreamWriter file = File.CreateText(workingFile))
+            using (StreamWriter file = File.CreateText(WorkingFile))
             {
                 JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings() { Formatting = Formatting.Indented, NullValueHandling = NullValueHandling.Ignore });
                 serializer.Serialize(file, Words);
+                //
+                
             }
+            //using(FileStream sourceStream = new FileStream(WorkingFile, FileMode.Open))
+            //{
+            //    using (GZipStream compressionStream = new GZipStream(sourceStream, CompressionMode.Compress))
+            //    {
+            //        sourceStream.CopyTo(compressionStream);
+            //    }
+            //}
+
+
+            //using(var zipStream = new GZipStream())
         }
 
         private void CommandBinding_SaveFileAs(object sender, ExecutedRoutedEventArgs e)
