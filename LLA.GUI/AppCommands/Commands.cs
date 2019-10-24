@@ -37,56 +37,7 @@ namespace LLA.GUI.AppCommands
             , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift), });
     }
 
-    public static class Commands_WordsDatagrid
-    {
-        public static readonly RoutedCommand ItemAddNew 
-            = new RoutedUICommand("Добавить новый элемент в конец списка"
-            , nameof(ItemAddNew)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.End, ModifierKeys.Control | ModifierKeys.Shift) });
-
-
-        public static readonly RoutedCommand ItemInsertNewBefore 
-            = new RoutedUICommand("Вставить новый элемент перед выделенными"
-            , nameof(ItemInsertNewBefore)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Shift)});
-
-
-        public static readonly RoutedCommand ItemInsertNewAfter 
-            = new RoutedUICommand("Вставить новый элемент после выделенных"
-            , nameof(ItemInsertNewAfter)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
-
-
-        public static readonly RoutedCommand ItemEdit 
-            = new RoutedUICommand("Редактировать выделенный элемент"
-            , nameof(ItemEdit)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
-
-
-        public static readonly RoutedCommand ItemsEdit 
-            = new RoutedUICommand("Редактировать несколько выделенных элементов"
-            , nameof(ItemsEdit)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
-        
-        
-        public static readonly RoutedUICommand ItemsEnumerate 
-            = new RoutedUICommand ("Заново пронумеровать выделенные элементы"
-            , nameof(ItemsEnumerate)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control), } );
-        
-
-        public static readonly RoutedCommand ItemsDelete 
-            = new RoutedUICommand("Удалить выделенные элементы"
-            , nameof(ItemInsertNewAfter)
-            , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
-    }
+    
 
 
     public class MultiKeyInputGesture : InputGesture

@@ -3,27 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LLA.GUI"
+        xmlns:local="clr-namespace:LLA.GUI.UserControls"
         xmlns:commands="clr-namespace:LLA.GUI.AppCommands"
-        xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1920"
         Background="#293955">
-    <Window.Resources>
-        <Style x:Key="FocusVisual">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Rectangle Margin="-1"
-                           SnapsToDevicePixels="true"
-                           Stroke="#FF004979"
-                           StrokeThickness="2"
-                           StrokeDashArray="1 0"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>        
-    </Window.Resources>
+    
     <Grid SnapsToDevicePixels="True" UseLayoutRounding="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="20"/>
@@ -41,105 +26,18 @@
                     Background="#D6DBE9">
             <Menu VerticalAlignment="Center" Padding="3">
                 <MenuItem Header="Меню">
-                    <MenuItem Header="Открыть ..." Command="commands:Commands_Application.FileOpen"/>
+                    <MenuItem Header="Открыть ..."/>
                     <Separator/>
-                    <MenuItem Header="Сохранить" Command="commands:Commands_Application.FileSave"/>
-                    <MenuItem Header="Сохранить как ..." Command="commands:Commands_Application.FileSaveAs"/>
+                    <MenuItem Header="Сохранить"/>
+                    <MenuItem Header="Сохранить как ..."/>
                     <Separator/>
                     <MenuItem Header="Настройки ..." Command="ApplicationCommands.Properties"/>
                     <MenuItem Header="О программе ..."/>
-                    <MenuItem Header="Выход" Command="commands:Commands_Application.AppClose"/>
+                    <MenuItem Header="Выход"/>
                 </MenuItem>
             </Menu>
         </StackPanel>
 
-        <DataGrid x:Name="ctrl_DataGrid_Words" Grid.Row="1" Grid.Column="1"
-                  AutoGenerateColumns="False"
-                  AlternatingRowBackground="#F4F7F9"
-                  GridLinesVisibility="Vertical"
-                  VerticalGridLinesBrush="#B8C6D8"                  
-                  HorizontalGridLinesBrush="#EFF4F7"
-                  SelectionMode="Extended"
-                  CanUserResizeRows="False"
-                  CanUserAddRows="True"
-                  BeginningEdit="Ctrl_DataGrid_Words_BeginningEdit"
-                  KeyUp="Ctrl_DataGrid_Words_KeyUp">
-            <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#B8C0D8"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                        </Trigger>
-                    </Style.Triggers>
-                    <Style.Setters>
-                        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-                        <Setter Property="Margin" Value="0"/>
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Height" Value="18"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type DataGridCell}">
-                                    <Grid Background="{TemplateBinding Background}">
-                                        <ContentPresenter VerticalAlignment="Center" />
-                                    </Grid>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style.Setters>
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Создано">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=CreatedAt, StringFormat=\{0:yyyy.MM.dd-ddd   HH:mm:ss\}, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture} }"
-                                       Margin="3, 0"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Урок" Binding="{Binding Path=LessonNumber}"/>
-                <DataGridTextColumn Header="№ п.п." Binding="{Binding Path=WordOrder}"/>
-                
-                <DataGridTextColumn Header="ENG" Binding="{Binding Path=WritingEng}"/>
-                <DataGridTextColumn Header="Произношение" Binding="{Binding Path=Speling}"/>
-                
-                <DataGridTextColumn Header="UKR" Binding="{Binding Path=WritingUkr}"/>
-                <DataGridTextColumn Header="UKR (примечания)" Binding="{Binding Path=RemarksUkr}"/>
-                <DataGridTextColumn Header="Произношение по UKR" Binding="{Binding Path=SpelingByUkr}"/>
-                
-                <DataGridTextColumn Header="RUS" Binding="{Binding Path=WritingRus}"/>
-                <DataGridTextColumn Header="RUS (примечания)" Binding="{Binding Path=RemarkssRus}"/>
-                <DataGridTextColumn Header="Произношение по RUS" Binding="{Binding Path=SpelingByRus}"/>
-                
-                <DataGridCheckBoxColumn Header="Изучать" />
-                <DataGridTemplateColumn Header="Запланироно на">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <DatePicker/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Добавить..."  Command="commands:Commands_WordsDatagrid.AddNewItem" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>
-                    <MenuItem Header="Удалить"/>
-                    <Separator/>
-                    <MenuItem Header="Вставить над" Command="ApplicationCommands.Paste" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>
-                    <MenuItem Header="Вставить под" Command="MediaCommands.BoostBass" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>
-                    <Separator/>
-                    <MenuItem Header="Продолжить нумерацию" Command="MediaCommands.IncreaseBass" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>
-                    <MenuItem Header="Spread data" Command="commands:Commands_WordsDatagrid.SpreadData" CommandTarget="{Binding ElementName=ctrl_DataGrid_Words}"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
-
+        <local:WordsTable x:Name="ctrl_DataGrid_Words" Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </Window>
