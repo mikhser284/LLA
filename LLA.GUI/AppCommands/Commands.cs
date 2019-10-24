@@ -10,54 +10,82 @@ using System.Windows.Input;
 
 namespace LLA.GUI.AppCommands
 {
-    public static class Commands
-    {
-        public static readonly ICommand AppClose;
-        public static readonly ICommand FileOpen;
-        public static readonly ICommand FileSave;
-        public static readonly ICommand FileSaveAs;
-
-        static Commands()
-        {
-            var inputGestures = new InputGestureCollection();
-            inputGestures.Add(new _MultiKeyGesture(new Key[] { Key.A, Key.Q }, ModifierKeys.Control));
-        }
-    }
-
     public static class Commands_Application
     {
-        public static readonly RoutedUICommand AppClose = new RoutedUICommand ("Close application"
-                , nameof(AppClose)
-                , typeof(Commands_Application)
-                , new InputGestureCollection() { new KeyGesture(Key.F4, ModifierKeys.Alt), } );
+        public static readonly RoutedUICommand AppClose 
+            = new RoutedUICommand ("Закрыть приложение"
+            , nameof(AppClose)
+            , typeof(Commands_Application)
+            , new InputGestureCollection() { new KeyGesture(Key.F4, ModifierKeys.Alt), } );
 
-        public static readonly RoutedUICommand FileOpen = new RoutedUICommand ("Open dictionary file"
-                , nameof(FileOpen)
-                , typeof(Commands_Application)
-                , new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control), } );
+        public static readonly RoutedUICommand FileOpen 
+            = new RoutedUICommand ("Открыть файл"
+            , nameof(FileOpen)
+            , typeof(Commands_Application)
+            , new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control), } );
 
-        public static readonly RoutedUICommand FileSave = new RoutedUICommand("Save dictionary file"
-                , nameof(FileSave)
-                , typeof(Commands_Application)
-                , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control), } );
+        public static readonly RoutedUICommand FileSave 
+            = new RoutedUICommand("Сохранить файл"
+            , nameof(FileSave)
+            , typeof(Commands_Application)
+            , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control), } );
 
-        public static readonly RoutedUICommand FileSaveAs = new RoutedUICommand("Save dictionary file as ..."
-                , nameof(FileSaveAs)
-                , typeof(Commands_Application));
+        public static readonly RoutedUICommand FileSaveAs 
+            = new RoutedUICommand("Сохранить файл как ..."
+            , nameof(FileSaveAs)
+            , typeof(Commands_Application)
+            , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift), });
     }
 
     public static class Commands_WordsDatagrid
     {
-        public static readonly RoutedUICommand SpreadData = new RoutedUICommand ("CreatingTime = Spread date, increase time"
-                , nameof(SpreadData)
-                , typeof(Commands_WordsDatagrid)
-                , new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control), } );
-        
-        public static readonly RoutedCommand AddNewItem = new RoutedUICommand("Add new item"
-            , nameof(AddNewItem)
+        public static readonly RoutedCommand ItemAddNew 
+            = new RoutedUICommand("Добавить новый элемент в конец списка"
+            , nameof(ItemAddNew)
             , typeof(Commands_WordsDatagrid)
-            , new InputGestureCollection() { new KeyGesture(Key.Insert, ModifierKeys.Control | ModifierKeys.Shift)}
-            );
+            , new InputGestureCollection() { new KeyGesture(Key.End, ModifierKeys.Control | ModifierKeys.Shift) });
+
+
+        public static readonly RoutedCommand ItemInsertNewBefore 
+            = new RoutedUICommand("Вставить новый элемент перед выделенными"
+            , nameof(ItemInsertNewBefore)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Shift)});
+
+
+        public static readonly RoutedCommand ItemInsertNewAfter 
+            = new RoutedUICommand("Вставить новый элемент после выделенных"
+            , nameof(ItemInsertNewAfter)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
+
+
+        public static readonly RoutedCommand ItemEdit 
+            = new RoutedUICommand("Редактировать выделенный элемент"
+            , nameof(ItemEdit)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
+
+
+        public static readonly RoutedCommand ItemsEdit 
+            = new RoutedUICommand("Редактировать несколько выделенных элементов"
+            , nameof(ItemsEdit)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
+        
+        
+        public static readonly RoutedUICommand ItemsEnumerate 
+            = new RoutedUICommand ("Заново пронумеровать выделенные элементы"
+            , nameof(ItemsEnumerate)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control), } );
+        
+
+        public static readonly RoutedCommand ItemsDelete 
+            = new RoutedUICommand("Удалить выделенные элементы"
+            , nameof(ItemInsertNewAfter)
+            , typeof(Commands_WordsDatagrid)
+            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
     }
 
 

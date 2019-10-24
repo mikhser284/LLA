@@ -40,20 +40,56 @@ namespace LLA.GUI
             CommandBindings.Add(new CommandBinding(Commands_Application.FileOpen, CommandBinding_OpenFiles));
             CommandBindings.Add(new CommandBinding(Commands_Application.FileSave, CommandBinding_SaveFile));
             CommandBindings.Add(new CommandBinding(Commands_Application.FileSaveAs, CommandBinding_SaveFileAs));
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, CommandBinding_TableItem_Delete));
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, CommandBinding_TableItem_Insert));
-            CommandBindings.Add(new CommandBinding(MediaCommands.IncreaseBass, CommandBinding_TableItems_Enumerate));
-            CommandBindings.Add(new CommandBinding(MediaCommands.BoostBass, CommandBinding_TableItems_InsertBelow));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Properties, CommandBinding_ShowDialog_Settings));
-            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.SpreadData, CommandBinding_WordsDatagrid_SpreadData));
-            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.AddNewItem, CommandBinding_WordsDatagrid_AddNewItem));
+            //
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemAddNew, Commands_WordsDatagrid_ItemAddNew));
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemInsertNewBefore, Commands_WordsDatagrid_ItemInsertNewBefore));
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemInsertNewAfter, Commands_WordsDatagrid_ItemInsertNewAfter));
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemEdit, Commands_WordsDatagrid_ItemEdit));
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemsEdit, Commands_WordsDatagrid_ItemsEdit));
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemsEnumerate, CommandBinding_WordsDatagrid_ItemsEnumerate));            
+            CommandBindings.Add(new CommandBinding(Commands_WordsDatagrid.ItemsDelete, Commands_WordsDatagrid_ItemsDelete));
             //            
             ctrl_DataGrid_Words.ItemsSource = Words;
         }
 
 
+        private void Commands_WordsDatagrid_ItemAddNew(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_DataGrid_Words;
 
-        private void CommandBinding_WordsDatagrid_AddNewItem(object sender, ExecutedRoutedEventArgs e)
+            Int32 selectedIndex = ctrl.SelectedIndex;
+            if (selectedIndex >= 0)
+            {
+                Int32 itemsSelected = ctrl_DataGrid_Words.SelectedItems.Count;
+                ctrl_DataGrid_Words.ItemsSource = null;
+
+                Words.InsertRange(selectedIndex, itemsSelected.NewSet(() => new CWord()));
+                ctrl_DataGrid_Words.ItemsSource = Words;
+            }
+        }
+        
+        private void Commands_WordsDatagrid_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_DataGrid_Words;
+
+            Int32 selectedIndex = ctrl.SelectedIndex;
+            if (selectedIndex >= 0)
+            {
+                Int32 itemsSelected = ctrl.SelectedItems.Count;
+                Int32 indexOfLastItem = (selectedIndex + itemsSelected - 1);
+                indexOfLastItem = Math.Min(indexOfLastItem, Words.Count - 1);
+                Int32 lesson = Words[indexOfLastItem].LessonNumber;
+                Int32 order = Words[indexOfLastItem].WordOrder;
+
+                var newItems = itemsSelected.NewSet<CWord>(() => new CWord() { LessonNumber = lesson, WordOrder = ++order });
+                ctrl.ItemsSource = null;
+                Words.InsertRange(indexOfLastItem + 1, newItems);
+                ctrl.ItemsSource = Words;
+            }
+        }
+
+        private void Commands_WordsDatagrid_ItemInsertNewAfter(object sender, ExecutedRoutedEventArgs e)
         {
             //DataGrid ctrl = ctrl_DataGrid_Words;
             //List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
@@ -75,6 +111,37 @@ namespace LLA.GUI
             ctrl.ItemsSource = Words;
         }
 
+        private void Commands_WordsDatagrid_ItemEdit(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
+        }
+
+        private void Commands_WordsDatagrid_ItemsEdit(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
+        }
+
+
+        private void CommandBinding_WordsDatagrid_ItemsEnumerate(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_DataGrid_Words;
+            List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
+            CWord firstSelectedItem = selItems.FirstOrDefault();
+            DateTime startTime = firstSelectedItem.CreatedAt;
+            Int32 secondsPerOneItem = 180;
+            Int32 itemNo = 0;
+            selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
+            ctrl.Items.Refresh();
+            return;
+        }
+
+        private void Commands_WordsDatagrid_ItemsDelete(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
+        }
+
+
+
         private void CommandBinding_ShowDialog_Settings(object sender, ExecutedRoutedEventArgs e)
         {
             SettingsDialog settingsDialog = new SettingsDialog();
@@ -84,45 +151,8 @@ namespace LLA.GUI
             }
         }
 
-        private void CommandBinding_TableItem_Delete(object sender, ExecutedRoutedEventArgs e)
-        {
-            //TODO not implemented
-        }
 
-        private void CommandBinding_TableItem_Insert(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_DataGrid_Words;
 
-            Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0)
-            {
-                Int32 itemsSelected = ctrl_DataGrid_Words.SelectedItems.Count;
-                ctrl_DataGrid_Words.ItemsSource = null;
-
-                Words.InsertRange(selectedIndex, itemsSelected.NewSet(() => new CWord()));
-                ctrl_DataGrid_Words.ItemsSource = Words;
-            }
-        }
-
-        private void CommandBinding_TableItems_InsertBelow(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_DataGrid_Words;
-
-            Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0)
-            {
-                Int32 itemsSelected = ctrl.SelectedItems.Count;
-                Int32 indexOfLastItem = (selectedIndex + itemsSelected - 1);
-                indexOfLastItem = Math.Min(indexOfLastItem, Words.Count - 1);
-                Int32 lesson = Words[indexOfLastItem].LessonNumber;
-                Int32 order = Words[indexOfLastItem].WordOrder;
-
-                var newItems = itemsSelected.NewSet<CWord>(() => new CWord() { LessonNumber = lesson, WordOrder = ++order });
-                ctrl.ItemsSource = null;
-                Words.InsertRange(indexOfLastItem + 1, newItems);
-                ctrl.ItemsSource = Words;
-            }
-        }
 
         private void CommandBinding_TableItems_Enumerate(object sender, ExecutedRoutedEventArgs e)
         {
@@ -272,18 +302,6 @@ namespace LLA.GUI
             ctrl.BeginEdit();
         }
 
-        private void CommandBinding_WordsDatagrid_SpreadData(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_DataGrid_Words;
-            List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
-            CWord firstSelectedItem = selItems.FirstOrDefault();
-            DateTime startTime = firstSelectedItem.CreatedAt;
-            Int32 secondsPerOneItem = 180;
-            Int32 itemNo = 0;
-            selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
-            ctrl.Items.Refresh();
-            return;
-        }
     }
 
     //public static class Ext_DataGrid
