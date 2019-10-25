@@ -23,20 +23,40 @@ namespace LLA.GUI.UserControls
 {
     public partial class WordsTable : UserControl
     {
-        //
+        Window ParentWindow;
         public String WorkingFile = String.Empty;
         public Boolean NotSaved { get; private set; }
         public List<CWord> Words = new List<CWord>();
 
         public WordsTable()
         {
-            InitializeComponent();            
-            //
+            InitializeComponent();
             InitializeDatagrid(ctrl_WordsTable);
+            Loaded += WordsTable_Loaded;
         }
 
-        private void BindCommands(DataGrid ctrl)
+        private void WordsTable_Loaded(object sender, RoutedEventArgs e)
         {
+            ParentWindow = Window.GetWindow(this);
+            BindCommands(ParentWindow, ctrl_WordsTable);
+        }
+
+        private void BindCommands(Window parentWindow, DataGrid ctrl)
+        {
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsLoadFromFile, CommandBinding_OpenFile));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, CommandBinding_SaveFile));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, CommandBinding_SaveFileAs));
+            //
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, Commands_WordsDatagrid_ItemAddNew));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, Commands_WordsDatagrid_ItemInsertNewBefore));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, Commands_WordsDatagrid_ItemInsertNewAfter));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, Commands_WordsDatagrid_ItemEdit));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, Commands_WordsDatagrid_ItemsEdit));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, CommandBinding_TableItems_Enumerate));
+            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, Commands_WordsDatagrid_ItemsDelete));
+            //
+            //
+            //
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsLoadFromFile, CommandBinding_OpenFile));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, CommandBinding_SaveFile));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, CommandBinding_SaveFileAs));
@@ -46,7 +66,7 @@ namespace LLA.GUI.UserControls
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, Commands_WordsDatagrid_ItemInsertNewAfter));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, Commands_WordsDatagrid_ItemEdit));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, Commands_WordsDatagrid_ItemsEdit));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, CommandBinding_WordsDatagrid_ItemsEnumerate));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, CommandBinding_TableItems_Enumerate));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, Commands_WordsDatagrid_ItemsDelete));
         }
 
@@ -65,7 +85,7 @@ namespace LLA.GUI.UserControls
             //
             InitializeDatagridColumns(ctrl);
             InitializeDatagridContextMenu(ctrl);
-            BindCommands(ctrl);
+            
             //
             ctrl.ItemsSource = Words;
         }
@@ -226,7 +246,7 @@ namespace LLA.GUI.UserControls
             //ctrl.Items.Refresh();
             //return;
 
-            Words_Create newItemDialog = new Words_Create() { Owner = Window.GetWindow(this) };
+            Words_Create newItemDialog = new Words_Create() { Owner = ParentWindow };
             if (newItemDialog.ShowDialog() != true) return;
             DataGrid ctrl = ctrl_WordsTable;
             ctrl.ItemsSource = null;
@@ -236,7 +256,7 @@ namespace LLA.GUI.UserControls
             ctrl.ItemsSource = Words;
             //
             NotSaved = true;
-            Window.GetWindow(this).Title = $"{WorkingFile} *";
+            ParentWindow.Title = $"{WorkingFile} *";
         }
 
         private void Commands_WordsDatagrid_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)
@@ -277,11 +297,13 @@ namespace LLA.GUI.UserControls
         private void Commands_WordsDatagrid_ItemEdit(object sender, ExecutedRoutedEventArgs e)
         {
             //TODO not implemented
+            MessageBox.Show("Операция \"Редактирование елемента\" не реализована");
         }
 
         private void Commands_WordsDatagrid_ItemsEdit(object sender, ExecutedRoutedEventArgs e)
         {
             //TODO not implemented
+            MessageBox.Show("Операция \"Редактирование нескольких елементов\" не реализована");
         }
 
         private void CommandBinding_TableItems_Enumerate(object sender, ExecutedRoutedEventArgs e)

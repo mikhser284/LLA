@@ -53,14 +53,14 @@ namespace LLA.GUI.UserControls
             = new RoutedUICommand("Редактировать выделенный элемент"
             , nameof(ItemEdit)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
+            , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control) });
 
 
         public static readonly RoutedCommand ItemsEdit
             = new RoutedUICommand("Редактировать несколько выделенных элементов"
             , nameof(ItemsEdit)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Shift) });
+            , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control | ModifierKeys.Shift) });
 
 
         public static readonly RoutedUICommand ItemsEnumerate
