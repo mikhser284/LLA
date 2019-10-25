@@ -25,6 +25,7 @@ namespace LLA.GUI.UserControls
     {
         //
         public String WorkingFile = String.Empty;
+        public Boolean NotSaved { get; private set; }
         public List<CWord> Words = new List<CWord>();
 
         public WordsTable()
@@ -36,6 +37,10 @@ namespace LLA.GUI.UserControls
 
         private void BindCommands(DataGrid ctrl)
         {
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsLoadFromFile, CommandBinding_OpenFile));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, CommandBinding_SaveFile));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, CommandBinding_SaveFileAs));
+            //
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, Commands_WordsDatagrid_ItemAddNew));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, Commands_WordsDatagrid_ItemInsertNewBefore));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, Commands_WordsDatagrid_ItemInsertNewAfter));
@@ -229,6 +234,9 @@ namespace LLA.GUI.UserControls
             word.CreatedAt = DateTime.Now;
             Words.Add(word);
             ctrl.ItemsSource = Words;
+            //
+            NotSaved = true;
+            Window.GetWindow(this).Title = $"{WorkingFile} *";
         }
 
         private void Commands_WordsDatagrid_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)
@@ -313,7 +321,7 @@ namespace LLA.GUI.UserControls
             //TODO not implemented
         }
 
-        private void CommandBinding_OpenFiles(object sender, ExecutedRoutedEventArgs e)
+        private void CommandBinding_OpenFile(object sender, ExecutedRoutedEventArgs e)
         {
             Dictionary<Int32, String> filter = new Dictionary<Int32, String>
             {
@@ -326,10 +334,13 @@ namespace LLA.GUI.UserControls
                 Multiselect = false,
                 Filter = String.Join("|", filter.Values)
             };
-            if (openFileDialog.ShowDialog() == true) OpenFiles(openFileDialog);
+            if (openFileDialog.ShowDialog() == true)
+            {
+                OpenFile(openFileDialog);
+            }
         }
 
-        private void OpenFiles(OpenFileDialog openFileDialog)
+        private void OpenFile(OpenFileDialog openFileDialog)
         {
             switch (openFileDialog.FilterIndex)
             {
@@ -352,12 +363,15 @@ namespace LLA.GUI.UserControls
             {
                 MessageBox.Show("Не удалось получить название файла.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
                 return;
-            }
+            }            
             using (StreamReader file = File.OpenText(fileName))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 Words = (List<CWord>)serializer.Deserialize(file, typeof(List<CWord>));
                 ctrl_WordsTable.ItemsSource = Words;
+                WorkingFile = fileName;
+                Window mainWindow = Window.GetWindow(this);
+                mainWindow.Title = WorkingFile;
             }
         }
 
@@ -377,8 +391,10 @@ namespace LLA.GUI.UserControls
             {
                 JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings() { Formatting = Formatting.Indented, NullValueHandling = NullValueHandling.Ignore });
                 serializer.Serialize(file, Words);
-                //
-
+                //                
+                Window mainWindow = Window.GetWindow(this);
+                mainWindow.Title = WorkingFile;
+                NotSaved = false;
             }
             //using(FileStream sourceStream = new FileStream(WorkingFile, FileMode.Open))
             //{
