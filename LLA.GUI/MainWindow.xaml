@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LLA.GUI.UserControls"
         xmlns:commands="clr-namespace:LLA.GUI.AppCommands"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920"
+        Title="MainWindow" Height="850" Width="1500"
         Background="#293955">
     
     <Grid SnapsToDevicePixels="True" UseLayoutRounding="True">
