@@ -4,6 +4,8 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,57 +19,101 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 
-namespace LLA.GUI.UserControls
+namespace LLA.GUI
 {
     public partial class WordsTable : UserControl
     {
-        Window ParentWindow;
+        public String Header { get; set; }
+        
+        Window ParentWindow { get; set; }
         public String WorkingFile = String.Empty;
+        
         public Boolean NotSaved { get; private set; }
-        public List<CWord> Words = new List<CWord>();
+        
+        public ObservableCollection<CWord> Words { get; set; }
 
         public WordsTable()
         {
             InitializeComponent();
+            Words = new ObservableCollection<CWord>();
+            Words.CollectionChanged += WordsOnCollectionChanged;
+
             InitializeDatagrid(ctrl_WordsTable);
-            Loaded += WordsTable_Loaded;
         }
 
-        private void WordsTable_Loaded(object sender, RoutedEventArgs e)
+        public static void LoadFromFile(String fileName, TabControl tabCtrl)
         {
+            if(!File.Exists(fileName)) return;
+            WordsTable wordsTable = new WordsTable();
+            wordsTable.LoadDictionary(fileName);
+            TabItem tabItem = new TabItem();
+            tabItem.Header = wordsTable.Header;
+            tabItem.Content = wordsTable;
+            tabCtrl.Items.Add(tabItem);
+        }
+
+        public void CloseFile(TabControl tCtrl, Int32 indexOfselectedTab)
+        {
+            if (NotSaved)
+            {
+                MessageBoxResult msgBoxResult = MessageBox.Show($"Сохранить файл \"{WorkingFile}\"", "Сохранить изменения?", MessageBoxButton.YesNoCancel);
+                if (msgBoxResult == MessageBoxResult.Yes)
+                {
+                    //TODO save to file
+                    MessageBox.Show("Операция не реализована");
+                }
+                else if (msgBoxResult == MessageBoxResult.Cancel) return;
+            }
+
+            TabItem tabItem = (TabItem)tCtrl.Items[indexOfselectedTab];
+            tabItem.Content = null;
+            tCtrl.Items.RemoveAt(indexOfselectedTab);
+            UserSession.Data.OpenedFiles.Remove(WorkingFile);
+            UserSession.Save();
+        }
+
+        private void WordsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            MessageBox.Show("Item changed");
+            NotSaved = true;
+            Header = $"{Path.GetFileName(WorkingFile)} *";
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
             ParentWindow = Window.GetWindow(this);
             BindCommands(ParentWindow, ctrl_WordsTable);
         }
 
+        protected override 
+
         private void BindCommands(Window parentWindow, DataGrid ctrl)
         {
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsLoadFromFile, CommandBinding_OpenFile));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, CommandBinding_SaveFile));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, CommandBinding_SaveFileAs));
             //
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, Commands_WordsDatagrid_ItemAddNew));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, Commands_WordsDatagrid_ItemInsertNewBefore));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, Commands_WordsDatagrid_ItemInsertNewAfter));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, Commands_WordsDatagrid_ItemEdit));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, Commands_WordsDatagrid_ItemsEdit));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, CommandBinding_TableItems_Enumerate));
-            parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, Commands_WordsDatagrid_ItemsDelete));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, ExecureCommand_ItemAddNew));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, ExecuteCommand_ItemInsertNewBefore));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, ExecuteCommand_ItemInsertNewAfter));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, ExecuteCommand_ItemEdit));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, ExecuteCommand_ItemsEdit));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, ExecuteCommand_ItemsEnumerate));
+            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, ExecuteCommand_ItemsDelete));
             //
             //
             //
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsLoadFromFile, CommandBinding_OpenFile));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, CommandBinding_SaveFile));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, CommandBinding_SaveFileAs));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, ExecuteCommand_ItemsSaveToFile));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, ExecuteCommand_ItemsSaveToNewFile));
             //
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, Commands_WordsDatagrid_ItemAddNew));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, Commands_WordsDatagrid_ItemInsertNewBefore));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, Commands_WordsDatagrid_ItemInsertNewAfter));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, Commands_WordsDatagrid_ItemEdit));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, Commands_WordsDatagrid_ItemsEdit));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, CommandBinding_TableItems_Enumerate));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, Commands_WordsDatagrid_ItemsDelete));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, ExecureCommand_ItemAddNew));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, ExecuteCommand_ItemInsertNewBefore));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, ExecuteCommand_ItemInsertNewAfter));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, ExecuteCommand_ItemEdit));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, ExecuteCommand_ItemsEdit));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, ExecuteCommand_ItemsEnumerate));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, ExecuteCommand_ItemsDelete));
         }
 
         private void InitializeDatagrid(DataGrid ctrl)
@@ -85,7 +131,6 @@ namespace LLA.GUI.UserControls
             //
             InitializeDatagridColumns(ctrl);
             InitializeDatagridContextMenu(ctrl);
-            
             //
             ctrl.ItemsSource = Words;
         }
@@ -93,63 +138,79 @@ namespace LLA.GUI.UserControls
         private void InitializeDatagridColumns(DataGrid ctrl)
         {
             CWord word = null;
-            DataGridTextColumn createdAt = new DataGridTextColumn
-            {
-                Header = "Создано",
-                Binding = new Binding(nameof(word.CreatedAt))
-            };
             DataGridTextColumn lessonNumber = new DataGridTextColumn
             {
                 Header = "Урок",
-                Binding = new Binding(nameof(word.LessonNumber))
+                Binding = new Binding(nameof(word.LessonNumber)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn wordOrder = new DataGridTextColumn
             {
                 Header = "№ п.п.",
-                Binding = new Binding(nameof(word.WordOrder))
+                Binding = new Binding(nameof(word.WordOrder)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn writingEng = new DataGridTextColumn
             {
                 Header = "ENG",
-                Binding = new Binding(nameof(word.WritingEng))
+                Binding = new Binding(nameof(word.WritingEng)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn speling = new DataGridTextColumn
             {
                 Header = "Произношение",
-                Binding = new Binding(nameof(word.Speling))
+                Binding = new Binding(nameof(word.Speling)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn writingUkr = new DataGridTextColumn
             {
                 Header = "UKR",
-                Binding = new Binding(nameof(word.WritingUkr))
+                Binding = new Binding(nameof(word.WritingUkr)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn remarksUkr = new DataGridTextColumn
             {
                 Header = "UKR (примечания)",
-                Binding = new Binding(nameof(word.RemarksUkr))
+                Binding = new Binding(nameof(word.RemarksUkr)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn spelingByUkr = new DataGridTextColumn
             {
                 Header = "Произношение по UKR",
-                Binding = new Binding(nameof(word.SpelingByUkr))
+                Binding = new Binding(nameof(word.SpelingByUkr)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn writingRus = new DataGridTextColumn
             {
                 Header = "RUS",
-                Binding = new Binding(nameof(word.WritingRus))
+                Binding = new Binding(nameof(word.WritingRus)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn remarksRus = new DataGridTextColumn
             {
                 Header = "RUS (примечания)",
-                Binding = new Binding(nameof(word.RemarkssRus))
+                Binding = new Binding(nameof(word.RemarksRus)) { Mode = BindingMode.TwoWay }
+            };
+            //
+            DataGridTextColumn createdAt = new DataGridTextColumn
+            {
+                Header = "Создано",
+                Binding = new Binding(nameof(word.CreatedAt)) { Mode = BindingMode.OneWay, StringFormat = "{0:yyyy.MM.dd-ddd\tHH:mm:ss}", ConverterCulture = CultureInfo.CurrentCulture }
+            };
+            DataGridTextColumn modifiedAt = new DataGridTextColumn
+            {
+                Header = "Изменено",
+                Binding = new Binding(nameof(word.ModifiedAt)) { Mode = BindingMode.OneWay, StringFormat = "{0:yyyy.MM.dd-ddd\tHH:mm:ss}", ConverterCulture = CultureInfo.CurrentCulture }
+            };
+            DataGridTextColumn version = new DataGridTextColumn
+            {
+                Header = "Ver.",
+                Binding = new Binding(nameof(word.Version)) { Mode = BindingMode.OneWay }
             };
             DataGridTextColumn spelingByRus = new DataGridTextColumn
             {
                 Header = "Произношение по RUS",
-                Binding = new Binding(nameof(word.SpelingByRus))
+                Binding = new Binding(nameof(word.SpelingByRus)) { Mode = BindingMode.TwoWay }
+            };
+            DataGridTextColumn uid = new DataGridTextColumn
+            {
+                Header = "Uid",
+                Binding = new Binding(nameof(word.Uid)) { Mode = BindingMode.OneWay }
             };
 
-            ctrl.Columns.Add(createdAt);
+
             ctrl.Columns.Add(lessonNumber);
             ctrl.Columns.Add(wordOrder);
             ctrl.Columns.Add(writingEng);
@@ -160,15 +221,15 @@ namespace LLA.GUI.UserControls
             ctrl.Columns.Add(writingRus);
             ctrl.Columns.Add(remarksRus);
             ctrl.Columns.Add(spelingByRus);
+            //
+            ctrl.Columns.Add(createdAt);
+            ctrl.Columns.Add(modifiedAt);
+            ctrl.Columns.Add(version);
+            ctrl.Columns.Add(uid);
         }
 
         private void InitializeDatagridContextMenu(DataGrid ctrl)
         {   
-            MenuItem itemsLoadFromFile = new MenuItem()
-            {
-                Header = "Загрузить из файла ...",
-                Command = WordsTable_Commands.ItemsLoadFromFile
-            };
             MenuItem itemsSaveToFile = new MenuItem()
             {
                 Header = "Сохранить в файл ...",
@@ -180,7 +241,7 @@ namespace LLA.GUI.UserControls
                 Command = WordsTable_Commands.ItemsSaveToNewFile
             };
             MenuItem file = new MenuItem() { Header = "Файл" };
-            file.Items.Add(itemsLoadFromFile);
+            
             file.Items.Add(itemsSaveToFile);
             file.Items.Add(itemsSaveToNewFile);
             MenuItem itemAddNew = new MenuItem()
@@ -234,133 +295,7 @@ namespace LLA.GUI.UserControls
             mnu.Add(itemsDelete);
         }
 
-        private void Commands_WordsDatagrid_ItemAddNew(object sender, ExecutedRoutedEventArgs e)
-        {
-            //DataGrid ctrl = ctrl_DataGrid_Words;
-            //List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
-            //CWord firstSelectedItem = selItems.FirstOrDefault();
-            //DateTime startTime = firstSelectedItem.CreatedAt;
-            //Int32 secondsPerOneItem = 180;
-            //Int32 itemNo = 0;
-            //selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
-            //ctrl.Items.Refresh();
-            //return;
-
-            Words_Create newItemDialog = new Words_Create() { Owner = ParentWindow };
-            if (newItemDialog.ShowDialog() != true) return;
-            DataGrid ctrl = ctrl_WordsTable;
-            ctrl.ItemsSource = null;
-            CWord word = newItemDialog.Word;
-            word.CreatedAt = DateTime.Now;
-            Words.Add(word);
-            ctrl.ItemsSource = Words;
-            //
-            NotSaved = true;
-            ParentWindow.Title = $"{WorkingFile} *";
-        }
-
-        private void Commands_WordsDatagrid_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_WordsTable;
-
-            Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0)
-            {
-                Int32 itemsSelected = ctrl.SelectedItems.Count;
-                Int32 indexOfLastItem = (selectedIndex + itemsSelected - 1);
-                indexOfLastItem = Math.Min(indexOfLastItem, Words.Count - 1);
-                Int32 lesson = Words[indexOfLastItem].LessonNumber;
-                Int32 order = Words[indexOfLastItem].WordOrder;
-
-                var newItems = itemsSelected.NewSet<CWord>(() => new CWord() { LessonNumber = lesson, WordOrder = ++order });
-                ctrl.ItemsSource = null;
-                Words.InsertRange(indexOfLastItem + 1, newItems);
-                ctrl.ItemsSource = Words;
-            }
-        }
-
-        private void Commands_WordsDatagrid_ItemInsertNewAfter(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_WordsTable;
-
-            Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0)
-            {
-                Int32 itemsSelected = ctrl_WordsTable.SelectedItems.Count;
-                ctrl_WordsTable.ItemsSource = null;
-
-                Words.InsertRange(selectedIndex, itemsSelected.NewSet(() => new CWord()));
-                ctrl_WordsTable.ItemsSource = Words;
-            }
-        }
-
-        private void Commands_WordsDatagrid_ItemEdit(object sender, ExecutedRoutedEventArgs e)
-        {
-            //TODO not implemented
-            MessageBox.Show("Операция \"Редактирование елемента\" не реализована");
-        }
-
-        private void Commands_WordsDatagrid_ItemsEdit(object sender, ExecutedRoutedEventArgs e)
-        {
-            //TODO not implemented
-            MessageBox.Show("Операция \"Редактирование нескольких елементов\" не реализована");
-        }
-
-        private void CommandBinding_TableItems_Enumerate(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_WordsTable;
-
-            Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0 && selectedIndex <= Words.Count - 1)
-            {
-                Int32 itemsSelected = ctrl_WordsTable.SelectedItems.Count;
-                Int32 indexOfFirstItem = selectedIndex;
-                CWord word = Words[indexOfFirstItem];
-                Int32 lesson = word.LessonNumber;
-                Int32 order = word.WordOrder;
-                ctrl_WordsTable.ItemsSource = null;
-                Int32 countOfSelItems = Math.Min(selectedIndex + itemsSelected, Words.Count) - selectedIndex;
-                Words.GetRange(selectedIndex, countOfSelItems).ForEach(x => { x.LessonNumber = lesson; x.WordOrder = order++; });
-                ctrl_WordsTable.ItemsSource = Words;
-            }
-        }
-
-        private void CommandBinding_WordsDatagrid_ItemsEnumerate(object sender, ExecutedRoutedEventArgs e)
-        {
-            DataGrid ctrl = ctrl_WordsTable;
-            List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
-            CWord firstSelectedItem = selItems.FirstOrDefault();
-            DateTime startTime = firstSelectedItem.CreatedAt;
-            Int32 secondsPerOneItem = 180;
-            Int32 itemNo = 0;
-            selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
-            ctrl.Items.Refresh();
-            return;
-        }
-
-        private void Commands_WordsDatagrid_ItemsDelete(object sender, ExecutedRoutedEventArgs e)
-        {
-            //TODO not implemented
-        }
-
-        private void CommandBinding_OpenFile(object sender, ExecutedRoutedEventArgs e)
-        {
-            Dictionary<Int32, String> filter = new Dictionary<Int32, String>
-            {
-                { 1, "L2Dict (*.L2Dict)|*L2Dict" },
-                { 2, "Все файлы (*.*)|*.*" }
-            };
-
-            OpenFileDialog openFileDialog = new OpenFileDialog()
-            {
-                Multiselect = false,
-                Filter = String.Join("|", filter.Values)
-            };
-            if (openFileDialog.ShowDialog() == true)
-            {
-                OpenFile(openFileDialog);
-            }
-        }
+        
 
         private void OpenFile(OpenFileDialog openFileDialog)
         {
@@ -368,7 +303,7 @@ namespace LLA.GUI.UserControls
             {
                 case 1: // L2Dict
                     {
-                        LoadDictionary(openFileDialog.FileNames.FirstOrDefault());
+                        LoadDictionary(openFileDialog.FileName);
                         break;
                     }
                 default:
@@ -379,60 +314,30 @@ namespace LLA.GUI.UserControls
             }
         }
 
-        private void LoadDictionary(String fileName)
+        public void LoadDictionary(String fileName)
         {
             if (String.IsNullOrEmpty(fileName))
             {
                 MessageBox.Show("Не удалось получить название файла.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
                 return;
-            }            
+            }
+            if(!File.Exists(fileName))
+            {
+                MessageBox.Show($"Не удалось найти файл \"{WorkingFile}\"", "Файл не найден", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             using (StreamReader file = File.OpenText(fileName))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                Words = (List<CWord>)serializer.Deserialize(file, typeof(List<CWord>));
+                Words = (ObservableCollection<CWord>)serializer.Deserialize(file, typeof(ObservableCollection<CWord>));
                 ctrl_WordsTable.ItemsSource = Words;
                 WorkingFile = fileName;
                 Window mainWindow = Window.GetWindow(this);
-                mainWindow.Title = WorkingFile;
+                Header = WorkingFile;
+                UserSession.Data.OpenedFiles.Add(WorkingFile);
+                UserSession.Save();
             }
-        }
-
-        private void CommandBinding_SaveFile(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (String.IsNullOrEmpty(WorkingFile))
-            {
-                SaveFileDialog saveFileDialog = new SaveFileDialog()
-                {
-                    DefaultExt = "L2Dict",
-                    AddExtension = true,
-                };
-                if (saveFileDialog.ShowDialog() != true) return;
-                WorkingFile = saveFileDialog.FileName;
-            }
-            using (StreamWriter file = File.CreateText(WorkingFile))
-            {
-                JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings() { Formatting = Formatting.Indented, NullValueHandling = NullValueHandling.Ignore });
-                serializer.Serialize(file, Words);
-                //                
-                Window mainWindow = Window.GetWindow(this);
-                mainWindow.Title = WorkingFile;
-                NotSaved = false;
-            }
-            //using(FileStream sourceStream = new FileStream(WorkingFile, FileMode.Open))
-            //{
-            //    using (GZipStream compressionStream = new GZipStream(sourceStream, CompressionMode.Compress))
-            //    {
-            //        sourceStream.CopyTo(compressionStream);
-            //    }
-            //}
-
-
-            //using(var zipStream = new GZipStream())
-        }
-
-        private void CommandBinding_SaveFileAs(object sender, ExecutedRoutedEventArgs e)
-        {
-            //TODO not implemented
+            //Words.ForEach(x => x.Uid = Guid.NewGuid());
         }
 
         private void Ctrl_DataGrid_Words_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
@@ -472,6 +377,160 @@ namespace LLA.GUI.UserControls
             dgRow.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             ctrl.CurrentCell = new DataGridCellInfo(ctrl.Items[ctrl.SelectedIndex], ctrl.Columns[2]);
             ctrl.BeginEdit();
+        }
+    }
+
+
+    public partial class WordsTable
+    {
+        private void ExecuteCommand_ItemsSaveToFile(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (String.IsNullOrEmpty(WorkingFile))
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog()
+                {
+                    DefaultExt = "L2Dict",
+                    AddExtension = true,
+                };
+                if (saveFileDialog.ShowDialog() != true) return;
+                WorkingFile = saveFileDialog.FileName;
+            }
+            using (StreamWriter file = File.CreateText(WorkingFile))
+            {
+                JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings() { Formatting = Formatting.Indented, NullValueHandling = NullValueHandling.Ignore });
+                serializer.Serialize(file, Words);
+                //                
+                Window mainWindow = Window.GetWindow(this);
+                mainWindow.Title = WorkingFile;
+                NotSaved = false;
+            }
+            //using(FileStream sourceStream = new FileStream(WorkingFile, FileMode.Open))
+            //{
+            //    using (GZipStream compressionStream = new GZipStream(sourceStream, CompressionMode.Compress))
+            //    {
+            //        sourceStream.CopyTo(compressionStream);
+            //    }
+            //}
+
+
+            //using(var zipStream = new GZipStream())
+        }
+
+        private void ExecuteCommand_ItemsSaveToNewFile(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
+        }
+
+        private void ExecureCommand_ItemAddNew(object sender, ExecutedRoutedEventArgs e)
+        {
+            //DataGrid ctrl = ctrl_DataGrid_Words;
+            //List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
+            //CWord firstSelectedItem = selItems.FirstOrDefault();
+            //DateTime startTime = firstSelectedItem.CreatedAt;
+            //Int32 secondsPerOneItem = 180;
+            //Int32 itemNo = 0;
+            //selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
+            //ctrl.Items.Refresh();
+            //return;
+
+            Words_Create newItemDialog = new Words_Create() { Owner = ParentWindow };
+            if (newItemDialog.ShowDialog() != true) return;
+            DataGrid ctrl = ctrl_WordsTable;
+            ctrl.ItemsSource = null;
+            CWord word = newItemDialog.Word;
+            //word.CreatedAt = DateTime.Now;
+            Words.Add(word);
+            ctrl.ItemsSource = Words;
+            //
+            NotSaved = true;
+            ParentWindow.Title = $"{WorkingFile} *";
+        }
+
+        private void ExecuteCommand_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+
+            Int32 selectedIndex = ctrl.SelectedIndex;
+            if (selectedIndex >= 0)
+            {
+                Int32 itemsSelected = ctrl.SelectedItems.Count;
+                Int32 indexOfLastItem = (selectedIndex + itemsSelected - 1);
+                indexOfLastItem = Math.Min(indexOfLastItem, Words.Count - 1);
+                Int32 lesson = Words[indexOfLastItem].LessonNumber;
+                Int32 order = Words[indexOfLastItem].WordOrder;
+
+                var newItems = itemsSelected.NewSet<CWord>(() => new CWord() { LessonNumber = lesson, WordOrder = ++order });
+                ctrl.ItemsSource = null;
+                newItems.ForEach(x => Words.Insert(indexOfLastItem + 1, x));
+                ctrl.ItemsSource = Words;
+            }
+        }
+
+        private void ExecuteCommand_ItemInsertNewAfter(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO ExecuteCommand_ItemInsertNewAfter
+            MessageBox.Show("Операция не реализована");
+
+            //DataGrid ctrl = ctrl_WordsTable;
+
+            //Int32 selectedIndex = ctrl.SelectedIndex;
+            //if (selectedIndex >= 0)
+            //{
+            //    Int32 itemsSelected = ctrl_WordsTable.SelectedItems.Count;
+            //    ctrl_WordsTable.ItemsSource = null;
+
+            //    Words.Insert(); .InsertRange(selectedIndex, itemsSelected.NewSet(() => new CWord()));
+            //    ctrl_WordsTable.ItemsSource = Words;
+            //}
+        }
+
+        private void ExecuteCommand_ItemEdit(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
+            MessageBox.Show("Операция \"Редактирование елемента\" не реализована");
+        }
+
+        private void ExecuteCommand_ItemsEdit(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
+            MessageBox.Show("Операция \"Редактирование нескольких елементов\" не реализована");
+        }
+
+        private void ExecuteCommand_ItemsEnumerate(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+
+            Int32 selectedIndex = ctrl.SelectedIndex;
+            if (selectedIndex >= 0 && selectedIndex <= Words.Count - 1)
+            {
+                Int32 itemsSelected = ctrl_WordsTable.SelectedItems.Count;
+                Int32 indexOfFirstItem = selectedIndex;
+                CWord word = Words[indexOfFirstItem];
+                Int32 lesson = word.LessonNumber;
+                Int32 order = word.WordOrder;
+                ctrl_WordsTable.ItemsSource = null;
+                Int32 countOfSelItems = Math.Min(selectedIndex + itemsSelected, Words.Count) - selectedIndex;
+                Words.ForEach(selectedIndex, countOfSelItems, x => { x.LessonNumber = lesson; x.WordOrder = order++; });
+                ctrl_WordsTable.ItemsSource = Words;
+            }
+        }
+
+        private void ExecuteCommand_ItemsEnumerate_Obsolete(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            List<CWord> selItems = ctrl.SelectedItems.Cast<CWord>().ToList<CWord>();
+            CWord firstSelectedItem = selItems.FirstOrDefault();
+            DateTime startTime = firstSelectedItem.CreatedAt;
+            //Int32 secondsPerOneItem = 180;
+            //Int32 itemNo = 0;
+            //selItems.ForEach(x => x.CreatedAt = startTime + TimeSpan.FromSeconds(itemNo++ * secondsPerOneItem));
+            ctrl.Items.Refresh();
+            return;
+        }
+
+        private void ExecuteCommand_ItemsDelete(object sender, ExecutedRoutedEventArgs e)
+        {
+            //TODO not implemented
         }
     }
 }

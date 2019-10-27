@@ -133,7 +133,7 @@ namespace LLA.GUI.Dialogs
                 Binding bind = new Binding()
                 {
                     Source = Word,
-                    Path = new PropertyPath(nameof(Word.RemarkssRus)),
+                    Path = new PropertyPath(nameof(Word.RemarksRus)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(rusWriting, TextBox.TextProperty, bind);

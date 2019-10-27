@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace LLA.GUI.UserControls
+namespace LLA.GUI
 {
     public static class WordsTable_Commands
     {
+        public static readonly RoutedCommand Close
+            = new RoutedUICommand("Закрыть"
+                , nameof(Close)
+                , typeof(WordsTable_Commands)
+                , new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control) });
+
         public static readonly RoutedCommand ItemsLoadFromFile
             = new RoutedUICommand("Загрузить из файла"
             , nameof(ItemsLoadFromFile)

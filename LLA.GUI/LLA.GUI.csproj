@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Aha-Soft-Free-3d-Printer-3D-objects.ico</ApplicationIcon>
+    <ApplicationIcon>AppLogo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

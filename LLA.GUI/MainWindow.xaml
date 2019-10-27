@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LLA.GUI.UserControls"
-        xmlns:commands="clr-namespace:LLA.GUI.AppCommands"
+        xmlns:local="clr-namespace:LLA.GUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="850" Width="1500"
         Background="#293955">
@@ -25,19 +24,36 @@
                     Orientation="Horizontal"
                     Background="#D6DBE9">
             <Menu VerticalAlignment="Center" Padding="3">
-                <MenuItem Header="Меню">
-                    <MenuItem Header="Открыть ..."/>
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Создать..." Command="local:AppCommands.FileCreate"/>
+                    <MenuItem Header="Открыть..." Command="local:AppCommands.FileOpen"/>
+                    <MenuItem Header="Недавние файлы">
+                        <MenuItem Header="Файл 1"/>
+                        <MenuItem Header="Файл 2"/>
+                        <MenuItem Header="Файл 3"/>
+                    </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Сохранить"/>
-                    <MenuItem Header="Сохранить как ..."/>
+                    <MenuItem Header="Сохранить" Command="local:AppCommands.FileSave"/>
+                    <MenuItem Header="Сохранить как..." Command="local:AppCommands.FileSaveAs"/>
+                    <MenuItem Header="Сохранить все" Command="local:AppCommands.FilesSaveAll"/>
                     <Separator/>
-                    <MenuItem Header="Настройки ..." Command="ApplicationCommands.Properties"/>
-                    <MenuItem Header="О программе ..."/>
-                    <MenuItem Header="Выход"/>
+                    <MenuItem Header="Закрыть" Command="local:AppCommands.FileClose"/>
+                    <Separator/>
+                    <MenuItem Header="Печать..." Command="local:AppCommands.Print"/>
+                    <Separator/>
+                    <MenuItem Header="Выход" Command="local:AppCommands.AppClose"/>
+                </MenuItem>
+                <MenuItem Header="Правка">
+                    <MenuItem Header="Отменить" Command="local:AppCommands.Undo"/>
+                    <MenuItem Header="Вернуть" Command="local:AppCommands.Redo"/>
+                </MenuItem>
+                <MenuItem Header="≡">
+                    <MenuItem Header="Настройки ..." Command="local:AppCommands.AppSettings"/>
+                    <MenuItem Header="О программе ..." Command="local:AppCommands.AppAbout"/>
                 </MenuItem>
             </Menu>
         </StackPanel>
 
-        <local:WordsTable x:Name="ctrl_DataGrid_Words" Grid.Row="1" Grid.Column="1"/>
+        <TabControl Name="ctrl_Files" Grid.Row="1" Grid.Column="1" Background="#293955" BorderThickness="0"/>
     </Grid>
 </Window>
