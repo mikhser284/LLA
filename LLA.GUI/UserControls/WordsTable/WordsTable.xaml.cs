@@ -24,17 +24,50 @@ using Path = System.IO.Path;
 
 namespace LLA.GUI
 {
+    //Properties
+    public partial class WordsTable
+    {
+        public String Header
+        {
+            get { return (String)GetValue(HeaderProperty); }
+            private set { SetValue(HeaderProperty, value); }
+        }
+        private void UpdateHeader()
+        {
+            Header = $"{(NotSaved == true ? "⯁ " : "")}{Path.GetFileNameWithoutExtension(WorkingFile)}";
+        }
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(String), typeof(WordsTable), new PropertyMetadata(default(String)));
+
+        public String WorkingFile
+        {
+            get { return (String)GetValue(WorkingFileProperty); }
+            set
+            {
+                SetValue(WorkingFileProperty, value);
+                UpdateHeader();
+            }
+        }
+        public static readonly DependencyProperty WorkingFileProperty = DependencyProperty.Register(nameof(WorkingFile), typeof(String), typeof(WordsTable), new PropertyMetadata(default(String)));
+
+        public Boolean NotSaved
+        {
+            get { return (Boolean)GetValue(NotSavedProperty); }
+            private set
+            {
+                SetValue(NotSavedProperty, value);
+                UpdateHeader();
+            }
+        }
+        public static readonly DependencyProperty NotSavedProperty = DependencyProperty.Register(nameof(NotSaved), typeof(Boolean), typeof(WordsTable), new PropertyMetadata(false));
+
+
+        Window ParentWindow { get; set; }
+
+        public ObservableCollection<CWord> Words { get; set; }
+    }
+
     public partial class WordsTable : UserControl
     {
-        public String Header { get; set; }
-        
-        Window ParentWindow { get; set; }
-        public String WorkingFile = String.Empty;
-        
-        public Boolean NotSaved { get; private set; }
-        
-        public ObservableCollection<CWord> Words { get; set; }
-
         public WordsTable()
         {
             InitializeComponent();
@@ -44,54 +77,21 @@ namespace LLA.GUI
             InitializeDatagrid(ctrl_WordsTable);
         }
 
-        public static void LoadFromFile(String fileName, TabControl tabCtrl)
-        {
-            if(!File.Exists(fileName)) return;
-            WordsTable wordsTable = new WordsTable();
-            wordsTable.LoadDictionary(fileName);
-            TabItem tabItem = new TabItem();
-            tabItem.Header = wordsTable.Header;
-            tabItem.Content = wordsTable;
-            tabCtrl.Items.Add(tabItem);
-        }
-
-        public void CloseFile(TabControl tCtrl, Int32 indexOfselectedTab)
-        {
-            if (NotSaved)
-            {
-                MessageBoxResult msgBoxResult = MessageBox.Show($"Сохранить файл \"{WorkingFile}\"", "Сохранить изменения?", MessageBoxButton.YesNoCancel);
-                if (msgBoxResult == MessageBoxResult.Yes)
-                {
-                    //TODO save to file
-                    MessageBox.Show("Операция не реализована");
-                }
-                else if (msgBoxResult == MessageBoxResult.Cancel) return;
-            }
-
-            TabItem tabItem = (TabItem)tCtrl.Items[indexOfselectedTab];
-            tabItem.Content = null;
-            tCtrl.Items.RemoveAt(indexOfselectedTab);
-            UserSession.Data.OpenedFiles.Remove(WorkingFile);
-            UserSession.Save();
-        }
+        
 
         private void WordsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            MessageBox.Show("Item changed");
             NotSaved = true;
-            Header = $"{Path.GetFileName(WorkingFile)} *";
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             ParentWindow = Window.GetWindow(this);
-            BindCommands(ParentWindow, ctrl_WordsTable);
+            BindCommandsAndHandlers(ParentWindow, ctrl_WordsTable);
         }
 
-        protected override 
-
-        private void BindCommands(Window parentWindow, DataGrid ctrl)
+        private void BindCommandsAndHandlers(Window parentWindow, DataGrid ctrl)
         {
             //
             //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, ExecureCommand_ItemAddNew));
@@ -295,8 +295,6 @@ namespace LLA.GUI
             mnu.Add(itemsDelete);
         }
 
-        
-
         private void OpenFile(OpenFileDialog openFileDialog)
         {
             switch (openFileDialog.FilterIndex)
@@ -308,7 +306,7 @@ namespace LLA.GUI
                     }
                 default:
                     {
-                        MessageBox.Show("Операция не поддерживается.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+                        MessageBox.Show("Операция не поддерживается.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                         break;
                     }
             }
@@ -318,7 +316,7 @@ namespace LLA.GUI
         {
             if (String.IsNullOrEmpty(fileName))
             {
-                MessageBox.Show("Не удалось получить название файла.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("Не удалось получить название файла.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
             if(!File.Exists(fileName))
@@ -332,12 +330,29 @@ namespace LLA.GUI
                 Words = (ObservableCollection<CWord>)serializer.Deserialize(file, typeof(ObservableCollection<CWord>));
                 ctrl_WordsTable.ItemsSource = Words;
                 WorkingFile = fileName;
-                Window mainWindow = Window.GetWindow(this);
-                Header = WorkingFile;
+                ParentWindow = Window.GetWindow(this);
+                
                 UserSession.Data.OpenedFiles.Add(WorkingFile);
                 UserSession.Save();
             }
             //Words.ForEach(x => x.Uid = Guid.NewGuid());
+        }
+
+        public static void LoadFromFile(String fileName, TabControl tabCtrl)
+        {
+            if (!File.Exists(fileName)) return;
+            WordsTable wordsTable = new WordsTable();
+            wordsTable.LoadDictionary(fileName);
+            TabItem tabItem = new TabItem() { Content = wordsTable };
+
+            Binding headerBinding = new Binding { Source = wordsTable, Path = new PropertyPath(nameof(Header)), Mode = BindingMode.OneWay };
+            BindingOperations.SetBinding(tabItem, TabItem.HeaderProperty, headerBinding);
+            Binding tooltipBinding = new Binding { Source = wordsTable, Path = new PropertyPath(nameof(WorkingFile)), Mode = BindingMode.OneWay };
+            BindingOperations.SetBinding(tabItem, TabItem.ToolTipProperty, tooltipBinding);
+
+
+            tabCtrl.Items.Add(tabItem);
+            tabItem.IsSelected = true;
         }
 
         private void Ctrl_DataGrid_Words_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
@@ -378,12 +393,25 @@ namespace LLA.GUI
             ctrl.CurrentCell = new DataGridCellInfo(ctrl.Items[ctrl.SelectedIndex], ctrl.Columns[2]);
             ctrl.BeginEdit();
         }
-    }
 
+        public void CloseFile()
+        {
+            TabItem tabItem = this.Parent as TabItem;
+            TabControl tabControl = tabItem?.Parent as TabControl;
+            if (tabControl == null) return;
+            if (NotSaved)
+            {
+                MessageBoxResult msgBoxResult = MessageBox.Show($"Сохранить файл \"{WorkingFile}\"", "Сохранить изменения?", MessageBoxButton.YesNoCancel);
+                if (msgBoxResult == MessageBoxResult.Yes) { SaveToFile(); }
+                else if (msgBoxResult == MessageBoxResult.Cancel) return;
+            }
+            tabItem.Content = null;
+            tabControl.Items.Remove(tabItem);
+            UserSession.Data.OpenedFiles.Remove(WorkingFile);
+            UserSession.Save();
+        }
 
-    public partial class WordsTable
-    {
-        private void ExecuteCommand_ItemsSaveToFile(object sender, ExecutedRoutedEventArgs e)
+        public void SaveToFile()
         {
             if (String.IsNullOrEmpty(WorkingFile))
             {
@@ -400,25 +428,40 @@ namespace LLA.GUI
                 JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings() { Formatting = Formatting.Indented, NullValueHandling = NullValueHandling.Ignore });
                 serializer.Serialize(file, Words);
                 //                
-                Window mainWindow = Window.GetWindow(this);
-                mainWindow.Title = WorkingFile;
                 NotSaved = false;
             }
-            //using(FileStream sourceStream = new FileStream(WorkingFile, FileMode.Open))
-            //{
-            //    using (GZipStream compressionStream = new GZipStream(sourceStream, CompressionMode.Compress))
-            //    {
-            //        sourceStream.CopyTo(compressionStream);
-            //    }
-            //}
+        }
+
+        public void SaveToNewFile()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                DefaultExt = "L2Dict",
+                AddExtension = true,
+            };
+            if (saveFileDialog.ShowDialog() != true) return;
+            WorkingFile = saveFileDialog.FileName;
+            using (StreamWriter file = File.CreateText(WorkingFile))
+            {
+                JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings() { Formatting = Formatting.Indented, NullValueHandling = NullValueHandling.Ignore });
+                serializer.Serialize(file, Words);
+                //                
+                NotSaved = false;
+            }
+        }
+    }
 
 
-            //using(var zipStream = new GZipStream())
+    public partial class WordsTable
+    {
+        private void ExecuteCommand_ItemsSaveToFile(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveToFile();
         }
 
         private void ExecuteCommand_ItemsSaveToNewFile(object sender, ExecutedRoutedEventArgs e)
         {
-            //TODO not implemented
+            SaveToNewFile();
         }
 
         private void ExecureCommand_ItemAddNew(object sender, ExecutedRoutedEventArgs e)
@@ -443,7 +486,6 @@ namespace LLA.GUI
             ctrl.ItemsSource = Words;
             //
             NotSaved = true;
-            ParentWindow.Title = $"{WorkingFile} *";
         }
 
         private void ExecuteCommand_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)

@@ -5,38 +5,79 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LLA.GUI.Dialogs.Knowledge_testing"
       mc:Ignorable="d" 
-      Title="KnowledgeTest" SizeToContent="WidthAndHeight" MinWidth="400">
+      Title="Тест знаний" SizeToContent="WidthAndHeight" MinWidth="600">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <StackPanel Grid.IsSharedSizeScope="True" FocusManager.FocusedElement="{Binding ElementName=Ctrl_EngWriting}">
+        <Label Content="Как правильно пишется это слово на английском?" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16"/>
+        <GroupBox Margin="3">
+            <GroupBox.Header>
+                <Label Content="UKR" Foreground="DodgerBlue" FontWeight="Bold" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="UKR"/>
-        <Label Grid.Column="1" Grid.Row="0" Content="Слово на українському"/>
-        <Label Grid.Column="1" Grid.Row="1" Content="(примітки)"/>
+                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <Label Name="Ctrl_UrkWriting" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
-        <Label Grid.Column="0" Grid.Row="2" Content="RUS"/>
-        <Label Grid.Column="1" Grid.Row="2" Content="Слово на русском"/>
-        <Label Grid.Column="1" Grid.Row="3" Content="(примечания)"/>
+                <Label Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
+                <Label Name="Ctrl_UkrRemarks" Grid.Column="1" Grid.Row="1" Margin="3"/>
+            </Grid>
+        </GroupBox>
 
-        <Label Grid.Column="0" Grid.Row="5" Content="ENG"/>
-        <TextBox Grid.Column="1" Grid.Row="5" Text="Введите ответ"/>
+        <GroupBox Margin="3">
+            <GroupBox.Header>
+                <Label Content="RUS" Foreground="Green" FontWeight="Bold" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <Label Name="Ctrl_RusWriting" Grid.Column="1" Grid.Row="0" Margin="3"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
+                <Label Name="Ctrl_RusRemarks" Grid.Column="1" Grid.Row="1" Margin="3"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Margin="3">
+            <GroupBox.Header>
+                <Label Content="ENG" Foreground="Red" FontWeight="Bold" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Content="Синонимы:"/>
+                <Label Name="Ctrl_EngSynonims" Grid.Column="1" Grid.Row="0" Margin="3"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Content="Ваш ответ:" FontWeight="Bold"/>
+                <TextBox Name="Ctrl_EngWriting" Grid.Column="1" Grid.Row="1" Margin="3" Text="{Binding Path=Word.Word_Eng}"/>
+            </Grid>
+        </GroupBox>
 
         <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="OK" MinWidth="100" Margin="10"/>
-            <Button Content="Cancel" MinWidth="100" Margin="10"/>
+            <Button Content="OK" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
+            <Button Content="Cancel" MinWidth="100" Margin="10" IsCancel="True" Click="ButtonClick_Cancel"/>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </Window>

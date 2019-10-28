@@ -27,6 +27,13 @@
                 <MenuItem Header="Файл">
                     <MenuItem Header="Создать..." Command="local:AppCommands.FileCreate"/>
                     <MenuItem Header="Открыть..." Command="local:AppCommands.FileOpen"/>
+                    <MenuItem Header="Последняя сессия">
+                        <MenuItem Header="Открыть" Command="local:AppCommands.FilesOpenLastSession"/>
+                        <Separator/>
+                        <MenuItem Header="Файл 1"/>
+                        <MenuItem Header="Файл 2"/>
+                        <MenuItem Header="Файл 3"/>
+                    </MenuItem>
                     <MenuItem Header="Недавние файлы">
                         <MenuItem Header="Файл 1"/>
                         <MenuItem Header="Файл 2"/>

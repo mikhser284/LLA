@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LLA.GUI.Dialogs"
         mc:Ignorable="d"
-        Title="Новый элемент" SizeToContent="WidthAndHeight" MinWidth="400" WindowStartupLocation="CenterOwner" ShowInTaskbar="True">
+        Title="Новое слово" SizeToContent="WidthAndHeight" MinWidth="600" WindowStartupLocation="CenterOwner" ShowInTaskbar="True">
 
     <StackPanel Grid.IsSharedSizeScope="True" FocusManager.FocusedElement="{Binding ElementName=Ctrl_EngWriting}">
         <GroupBox Margin="3">

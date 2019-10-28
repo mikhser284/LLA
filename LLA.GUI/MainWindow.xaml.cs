@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,6 +29,9 @@ namespace LLA.GUI
             CommandBindings.Add(new CommandBinding(AppCommands.FilesSaveAll, CommandFilesSaveAll_Executed, CommandFilesSaveAll_CanExecute));
             CommandBindings.Add(new CommandBinding(AppCommands.FileClose, CommandFileClose_Executed, CommandFileClose_CanExecute));
             //
+            CommandBindings.Add(new CommandBinding(AppCommands.TabSwitchToNext, CommandTabSwitchToNext_Executed, CommandTabSwitchToNext_CanExecute));
+            CommandBindings.Add(new CommandBinding(AppCommands.TabSwitchToPrev, CommandTabSwitchToPrev_Executed, CommandTabSwitchToPrev_CanExecute));
+            //
             CommandBindings.Add(new CommandBinding(AppCommands.Print, CommandPrint_Executed, CommandPrint_CanExecute));
             //
             CommandBindings.Add(new CommandBinding(AppCommands.AppClose, CommandAppClose_Executed, CommandAppClose_CanExecute));
@@ -39,6 +43,18 @@ namespace LLA.GUI
             //
             CommandBindings.Add(new CommandBinding(AppCommands.AppSettings, CommandAppSettings_Executed, CommandAppSettings_CanExecute));
             CommandBindings.Add(new CommandBinding(AppCommands.AppAbout, CommandAppAbout_Executed, CommandAppAbout_CanExecute));
+        }
+
+        private WordsTable GetSelectedWordsTable()
+        {
+            Int32 selectedTabIndex = ctrl_Files.SelectedIndex;
+            TabItem selectedTabItem = (TabItem)ctrl_Files.Items[selectedTabIndex];
+            return (WordsTable) selectedTabItem.Content;
+        }
+
+        private List<WordsTable> GetOpenedWordTables()
+        {
+            return ctrl_Files.Items.Cast<TabItem>().Where(x => x.Content != null && x.Content is WordsTable).Select(x => x.Content as WordsTable).ToList();
         }
     }
 
@@ -76,12 +92,18 @@ namespace LLA.GUI
 
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
-                Multiselect = false,
+                Multiselect = true,
                 Filter = String.Join("|", filter.Values)
             };
-            if (openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == false) return;
+
+            HashSet<String> alreadyOpenedFiles = new HashSet<String>();
+            GetOpenedWordTables().ForEach(x => alreadyOpenedFiles.Add(x.WorkingFile));
+
+            foreach(var fileName in openFileDialog.FileNames)
             {
-                WordsTable.LoadFromFile(openFileDialog.FileName, ctrl_Files);
+                if (alreadyOpenedFiles.Contains(fileName)) continue;
+                WordsTable.LoadFromFile(fileName, ctrl_Files);
             }
         }
 
@@ -104,16 +126,12 @@ namespace LLA.GUI
 
         private void CommandFileSave_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            
-            //TODO Implement CommandFileSave_CanExecute
             e.CanExecute = true;
         }
 
         private void CommandFileSave_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //TODO Implement CommandFileSave_Executed
-            MessageBox.Show($"Метод \"{nameof(CommandFileSave_Executed)}\" не реализован", "Не реализовано",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            GetSelectedWordsTable()?.SaveToFile();
         }
 
         //Command FileSaveAs
@@ -126,39 +144,31 @@ namespace LLA.GUI
 
         private void FileSaveAs_CommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            //TODO Implement FileSaveAs_CommandExecuted
-            MessageBox.Show($"Метод \"{nameof(FileSaveAs_CommandExecuted)}\" не реализован", "Не реализовано",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            GetSelectedWordsTable()?.SaveToNewFile();
         }
 
         //Command FilesSaveAll
 
         private void CommandFilesSaveAll_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            //TODO Implement CommandFilesSaveAll_CanExecute
             e.CanExecute = true;
         }
 
         private void CommandFilesSaveAll_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //TODO Implement CommandFilesSaveAll_Executed
-            MessageBox.Show($"Метод \"{nameof(CommandFilesSaveAll_Executed)}\" не реализован", "Не реализовано",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            GetOpenedWordTables().ForEach(x => x.SaveToFile());
         }
 
         //Command FileClose
 
         private void CommandFileClose_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            //TODO Implement CommandFileClose_CanExecute
             e.CanExecute = true;
         }
 
         private void CommandFileClose_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Int32 selectedTabIndex = ctrl_Files.SelectedIndex;
-            TabItem selectedTabItem = (TabItem)ctrl_Files.Items[selectedTabIndex];
-            ((WordsTable)selectedTabItem.Content)?.CloseFile(ctrl_Files, selectedTabIndex);
+            GetSelectedWordsTable()?.CloseFile();
         }
 
         //Command Print
@@ -249,6 +259,32 @@ namespace LLA.GUI
             //TODO Implement CommandAppAbout_Executed
             MessageBox.Show($"Метод \"{nameof(CommandAppAbout_Executed)}\" не реализован", "Не реализовано",
                 MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        //Command TabSwitchToNext
+
+        private void CommandTabSwitchToNext_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        { 
+            e.CanExecute = ctrl_Files.Items.Count > 0;
+        }
+
+        private void CommandTabSwitchToNext_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Int32 newSelectedTabIndex = ctrl_Files.SelectedIndex + 1;
+            ctrl_Files.SelectedIndex = newSelectedTabIndex < ctrl_Files.Items.Count ? newSelectedTabIndex : 0;
+        }
+
+        //Command TabSwitchToPrev
+
+        private void CommandTabSwitchToPrev_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = ctrl_Files.Items.Count > 0;
+        }
+
+        private void CommandTabSwitchToPrev_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Int32 newSelectedTabIndex = ctrl_Files.SelectedIndex - 1;
+            ctrl_Files.SelectedIndex = newSelectedTabIndex >= 0 ? newSelectedTabIndex : ctrl_Files.Items.Count - 1;
         }
     }
 

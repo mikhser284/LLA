@@ -103,6 +103,19 @@ namespace LLA.GUI
                 , typeof(AppCommands)
                 , new InputGestureCollection() { new KeyGesture(Key.F1, ModifierKeys.Control | ModifierKeys.Shift), });
 
+        /// <summary> Переключится на следующую вкладку </summary>
+        public static readonly RoutedUICommand TabSwitchToNext
+            = new RoutedUICommand("О приложении..."
+                , nameof(TabSwitchToNext)
+                , typeof(AppCommands)
+                , new InputGestureCollection() { new KeyGesture(Key.PageUp, ModifierKeys.Control | ModifierKeys.Shift), });
+
+        /// <summary> Переключится на предыдущую вкладку </summary>
+        public static readonly RoutedUICommand TabSwitchToPrev
+            = new RoutedUICommand("О приложении..."
+                , nameof(TabSwitchToPrev)
+                , typeof(AppCommands)
+                , new InputGestureCollection() { new KeyGesture(Key.PageDown, ModifierKeys.Control | ModifierKeys.Shift), });
     }
 
 
