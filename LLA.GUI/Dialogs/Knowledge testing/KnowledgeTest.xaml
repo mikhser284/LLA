@@ -9,7 +9,7 @@
 
     <StackPanel Grid.IsSharedSizeScope="True" FocusManager.FocusedElement="{Binding ElementName=Ctrl_EngWriting}">
         <Label Content="Как правильно пишется это слово на английском?" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16"/>
-        <GroupBox Margin="3">
+        <GroupBox Name="Ctrl_UkrGroup" Margin="3">
             <GroupBox.Header>
                 <Label Content="UKR" Foreground="DodgerBlue" FontWeight="Bold" />
             </GroupBox.Header>
@@ -23,15 +23,15 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
-                <Label Name="Ctrl_UrkWriting" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                <Label Name="Ctrl_UrkWriting_Name" Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <Label Name="Ctrl_UrkWriting_Value" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
-                <Label Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
-                <Label Name="Ctrl_UkrRemarks" Grid.Column="1" Grid.Row="1" Margin="3"/>
+                <Label Name="Ctrl_UkrRemarks_Name" Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
+                <Label Name="Ctrl_UkrRemarks_Value" Grid.Column="1" Grid.Row="1" Margin="3"/>
             </Grid>
         </GroupBox>
 
-        <GroupBox Margin="3">
+        <GroupBox Name="Ctrl_RusGroup" Margin="3">
             <GroupBox.Header>
                 <Label Content="RUS" Foreground="Green" FontWeight="Bold" />
             </GroupBox.Header>
@@ -45,15 +45,15 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Content="Написание:"/>
-                <Label Name="Ctrl_RusWriting" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                <Label Name="Ctrl_RusWriting_Name" Grid.Column="0" Grid.Row="0" Content="Написание:"/>
+                <Label Name="Ctrl_RusWriting_Value" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
-                <Label Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
-                <Label Name="Ctrl_RusRemarks" Grid.Column="1" Grid.Row="1" Margin="3"/>
+                <Label Name="Ctrl_RusRemarks_Name" Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
+                <Label Name="Ctrl_RusRemarks_Value" Grid.Column="1" Grid.Row="1" Margin="3"/>
             </Grid>
         </GroupBox>
 
-        <GroupBox Margin="3">
+        <GroupBox Name="Ctrl_EngGroup" Margin="3">
             <GroupBox.Header>
                 <Label Content="ENG" Foreground="Red" FontWeight="Bold" />
             </GroupBox.Header>
@@ -65,19 +65,40 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Content="Синонимы:"/>
-                <Label Name="Ctrl_EngSynonims" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                <Label Name="Ctrl_EngSynonims_Name" Grid.Column="0" Grid.Row="0" Content="Синонимы:"/>
+                <Label Name="Ctrl_EngSynonims_Value" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
-                <Label Grid.Column="0" Grid.Row="1" Content="Ваш ответ:" FontWeight="Bold"/>
-                <TextBox Name="Ctrl_EngWriting" Grid.Column="1" Grid.Row="1" Margin="3" Text="{Binding Path=Word.Word_Eng}"/>
+                <Label  Name="Ctrl_UserAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="1" Content="Ваш ответ:" FontWeight="Bold"/>
+                <TextBox Name="Ctrl_UserAnswer_EngWriting_Value" Grid.Column="1" Grid.Row="1" Margin="3" />
+
+                <Label Name="Ctrl_BRightAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="2" Content="Верный ответ:" FontWeight="Bold"/>
+                <Label Name="Ctrl_ARightAnswer_EngWriting_Value" Grid.Column="1" Grid.Row="2" Margin="3"/>
             </Grid>
         </GroupBox>
+        
+        <Grid Background="LightCoral">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            
+            <Label  Name="Ctrl_BUserAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" FontSize="40" FontWeight="Bold" Foreground="Red"
+                    Content="✔✖   Верно/Не верно" HorizontalContentAlignment="Center"/>
+        </Grid>
 
         <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="OK" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
-            <Button Content="Cancel" MinWidth="100" Margin="10" IsCancel="True" Click="ButtonClick_Cancel"/>
+            <Button Content="Проверить" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
+            <Button Content="Отложить" MinWidth="100" Margin="10" IsCancel="True" Click="ButtonClick_Cancel"/>
+            <Button Content="Завершить" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
         </StackPanel>
     </StackPanel>
 </Window>
