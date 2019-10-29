@@ -14,10 +14,10 @@ namespace LLA.Core
         Passed = 1
     }
 
-    public enum EWordLearningPlaning
+    public enum EWordLearningSheduler
     {
-        Automaticaly,
-        Manualy,
+        Manual = 0,
+        Auto = 1,
     }
 
     public class RepInterval
@@ -75,9 +75,9 @@ namespace LLA.Core
 
         public Int32 TestNo { get; set; }
 
-        public EWordRepeatingInterval RepeatingInterval { get; set; }
+        public Int32 RepeatingInterval { get; set; }
 
-
+        public Int32 LearningPriority { get; set; }
 
         public DateTime FinishedAt { get; set; }
         

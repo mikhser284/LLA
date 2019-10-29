@@ -26,7 +26,7 @@ namespace LLA.Core
         public DateTime ModifiedAt
         {
             get { return _modifiedAt; }
-            private set
+            set
             {
                 _modifiedAt = value;
                 OnPropChanged(nameof(ModifiedAt));
@@ -52,7 +52,7 @@ namespace LLA.Core
         public Guid Uid
         {
             get { return _uid; }
-            private set
+            set
             {
                 _uid = value;
                 OnPropChanged(nameof(Uid));
@@ -190,15 +190,15 @@ namespace LLA.Core
         }
 
 
-        public String _learningPriority;
-        [JsonProperty("10", Order = 11)]
-        public String LearningPriority
+        public EWordLearningSheduler _learningSheduler;
+        [JsonProperty("14", Order = 15)]
+        public EWordLearningSheduler LearningSheduler
         {
-            get { return _spelingByRus; }
+            get { return _learningSheduler; }
             set
             {
-                _learningPriority = value;
-                OnPropChanged(nameof(LearningPriority));
+                _learningSheduler = value;
+                OnPropChanged(nameof(LearningSheduler));
             }
         }
 

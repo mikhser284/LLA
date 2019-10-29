@@ -81,7 +81,7 @@
         
         <Grid Background="LightCoral">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="Title"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -91,14 +91,14 @@
             </Grid.RowDefinitions>
 
             
-            <Label  Name="Ctrl_BUserAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" FontSize="40" FontWeight="Bold" Foreground="Red"
-                    Content="✔✖   Верно/Не верно" HorizontalContentAlignment="Center"/>
+            <Label  Name="Ctrl_BUserAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" FontSize="40" FontWeight="Bold" Foreground="Green"
+                    Content="✔✖   Верно/Не верно" HorizontalContentAlignment="Center" Background="#FFD6FFCE"/>
         </Grid>
 
         <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Проверить" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
-            <Button Content="Отложить" MinWidth="100" Margin="10" IsCancel="True" Click="ButtonClick_Cancel"/>
-            <Button Content="Завершить" MinWidth="100" Margin="10" IsDefault="True" Click="ButtonClick_Ok"/>
+            <Button Content="Проверить" MinWidth="100" Margin="10" IsDefault="True"/>
+            <Button Content="Отложить" MinWidth="100" Margin="10" IsCancel="True" />
+            <Button Content="Завершить" MinWidth="100" Margin="10" IsDefault="True" />
         </StackPanel>
     </StackPanel>
 </Window>

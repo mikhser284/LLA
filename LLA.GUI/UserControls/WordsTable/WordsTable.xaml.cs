@@ -184,6 +184,18 @@ namespace LLA.GUI
                 Binding = new Binding(nameof(word.RemarksRus)) { Mode = BindingMode.TwoWay }
             };
             //
+            DataGridComboBoxColumn learningSheduler = new DataGridComboBoxColumn()
+            {
+                Header = "Планировщик изучения",
+                
+            };
+            Binding b = new Binding
+            {
+                Path = new PropertyPath(nameof(word.LearningSheduler)),
+                Mode = BindingMode.OneWay
+            };
+            BindingOperations.SetBinding(learningSheduler, DataGridComboBoxColumn.SelectedValuePathProperty, b);
+            // TODO
             DataGridTextColumn createdAt = new DataGridTextColumn
             {
                 Header = "Создано",
@@ -222,6 +234,7 @@ namespace LLA.GUI
             ctrl.Columns.Add(remarksRus);
             ctrl.Columns.Add(spelingByRus);
             //
+            ctrl.Columns.Add(learningSheduler);
             ctrl.Columns.Add(createdAt);
             ctrl.Columns.Add(modifiedAt);
             ctrl.Columns.Add(version);
@@ -335,7 +348,13 @@ namespace LLA.GUI
                 UserSession.Data.OpenedFiles.Add(WorkingFile);
                 UserSession.Save();
             }
-            //Words.ForEach(x => x.Uid = Guid.NewGuid());
+
+            foreach (var word in Words)
+            {
+                if(word.Uid == Guid.Empty) word.Uid = Guid.NewGuid();
+                if (word.ModifiedAt < word.CreatedAt) word.ModifiedAt = word.CreatedAt;
+                if (word.Version < 1) word.Version = 1;
+            }
         }
 
         public static void LoadFromFile(String fileName, TabControl tabCtrl)
@@ -364,11 +383,15 @@ namespace LLA.GUI
             CultureInfo cultureUkr = new CultureInfo("uk-UA");
             Dictionary<String, CultureInfo> headerAndInputLang = new Dictionary<String, CultureInfo>
             {
+                { "ENG",  cultureEng },
+
                 { "UKR",  cultureUkr },
                 { "UKR (примечания)",  cultureUkr },
-                { "ENG",  cultureEng },
+                { "Произношение по UKR",  cultureUkr },
+                
                 { "RUS",  cultureRus },
                 { "RUS (примечания)",  cultureRus },
+                { "Произношение по RUS",  cultureRus },
             };
             //
             String headerName = ctrl.CurrentCell.Column.Header.ToString();
