@@ -25,10 +25,10 @@
                     Background="#D6DBE9">
             <Menu VerticalAlignment="Center" Padding="3">
                 <MenuItem Header="Файл">
-                    <MenuItem Header="Создать..." Command="local:AppCommands.FileCreate"/>
-                    <MenuItem Header="Открыть..." Command="local:AppCommands.FileOpen"/>
+                    <MenuItem Header="Создать..." Command="local:CommandsOfApp.FileCreate"/>
+                    <MenuItem Header="Открыть..." Command="local:CommandsOfApp.FileOpen"/>
                     <MenuItem Header="Последняя сессия">
-                        <MenuItem Header="Открыть" Command="local:AppCommands.FilesOpenLastSession"/>
+                        <MenuItem Header="Открыть" Command="local:CommandsOfApp.FilesOpenLastSession"/>
                         <Separator/>
                         <MenuItem Header="Файл 1"/>
                         <MenuItem Header="Файл 2"/>
@@ -40,23 +40,23 @@
                         <MenuItem Header="Файл 3"/>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Сохранить" Command="local:AppCommands.FileSave"/>
-                    <MenuItem Header="Сохранить как..." Command="local:AppCommands.FileSaveAs"/>
-                    <MenuItem Header="Сохранить все" Command="local:AppCommands.FilesSaveAll"/>
+                    <MenuItem Header="Сохранить" Command="local:CommandsOfApp.FileSave"/>
+                    <MenuItem Header="Сохранить как..." Command="local:CommandsOfApp.FileSaveAs"/>
+                    <MenuItem Header="Сохранить все" Command="local:CommandsOfApp.FilesSaveAll"/>
                     <Separator/>
-                    <MenuItem Header="Закрыть" Command="local:AppCommands.FileClose"/>
+                    <MenuItem Header="Закрыть" Command="local:CommandsOfApp.FileClose"/>
                     <Separator/>
-                    <MenuItem Header="Печать..." Command="local:AppCommands.Print"/>
+                    <MenuItem Header="Печать..." Command="local:CommandsOfApp.Print"/>
                     <Separator/>
-                    <MenuItem Header="Выход" Command="local:AppCommands.AppClose"/>
+                    <MenuItem Header="Выход" Command="local:CommandsOfApp.AppClose"/>
                 </MenuItem>
                 <MenuItem Header="Правка">
-                    <MenuItem Header="Отменить" Command="local:AppCommands.Undo"/>
-                    <MenuItem Header="Вернуть" Command="local:AppCommands.Redo"/>
+                    <MenuItem Header="Отменить" Command="local:CommandsOfApp.Undo"/>
+                    <MenuItem Header="Вернуть" Command="local:CommandsOfApp.Redo"/>
                 </MenuItem>
                 <MenuItem Header="≡">
-                    <MenuItem Header="Настройки ..." Command="local:AppCommands.AppSettings"/>
-                    <MenuItem Header="О программе ..." Command="local:AppCommands.AppAbout"/>
+                    <MenuItem Header="Настройки ..." Command="local:CommandsOfApp.AppSettings"/>
+                    <MenuItem Header="О программе ..." Command="local:CommandsOfApp.AppAbout"/>
                 </MenuItem>
             </Menu>
         </StackPanel>

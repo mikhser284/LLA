@@ -10,111 +10,111 @@ using System.Windows.Input;
 
 namespace LLA.GUI
 {
-    public static class AppCommands
+    public static class CommandsOfApp
     {
         /// <summary> Создать новый файл </summary>
         public static readonly RoutedUICommand FileCreate
             = new RoutedUICommand("Создать..."
                 , nameof(FileCreate)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.N, ModifierKeys.Control), });
 
         /// <summary> Открыть файл </summary>
         public static readonly RoutedUICommand FileOpen 
             = new RoutedUICommand ("Открыть"
             , nameof(FileOpen)
-            , typeof(AppCommands)
+            , typeof(CommandsOfApp)
             , new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control), } );
 
         /// <summary> Открыть все файлы из последней сессии </summary>
         public static readonly RoutedUICommand FilesOpenLastSession
             = new RoutedUICommand("Открыть последнюю сессию"
                 , nameof(FilesOpenLastSession)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt), });
 
         /// <summary> Сохранить файл </summary>
         public static readonly RoutedUICommand FileSave
             = new RoutedUICommand("Сохранить"
                 , nameof(FileSave)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control), });
 
         /// <summary> Сохранить копию как новый файл </summary>
         public static readonly RoutedUICommand FileSaveAs
             = new RoutedUICommand("Сохранить как ..."
                 , nameof(FileSaveAs)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift), });
 
         /// <summary> Сохранить все файлы </summary>
         public static readonly RoutedUICommand FilesSaveAll
             = new RoutedUICommand("Сохранить как ..."
                 , nameof(FilesSaveAll)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), });
 
         /// <summary> Закрыть файл </summary>
         public static readonly RoutedUICommand FileClose
             = new RoutedUICommand("Закрыть"
                 , nameof(FileClose)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control), });
 
         /// <summary> Печать текущего файла </summary>
         public static readonly RoutedUICommand Print
             = new RoutedUICommand("Печать"
                 , nameof(Print)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.P, ModifierKeys.Control), });
 
         /// <summary> Выйти из приложения </summary>
         public static readonly RoutedUICommand AppClose 
             = new RoutedUICommand ("Выход"
             , nameof(AppClose)
-            , typeof(AppCommands)
+            , typeof(CommandsOfApp)
             , new InputGestureCollection() { new KeyGesture(Key.F4, ModifierKeys.Alt), } );
 
         /// <summary> Отменить действие </summary>
         public static readonly RoutedUICommand Undo
             = new RoutedUICommand("Выход"
                 , nameof(Undo)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.Z, ModifierKeys.Control), });
 
         /// <summary> Вернуть действие </summary>
         public static readonly RoutedUICommand Redo
             = new RoutedUICommand("Выход"
                 , nameof(Redo)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift), });
 
         /// <summary> Настройки приложения </summary>
         public static readonly RoutedUICommand AppSettings
             = new RoutedUICommand("Настройки..."
                 , nameof(AppSettings)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.F12, ModifierKeys.Control | ModifierKeys.Shift), });
 
         /// <summary> О приложении </summary>
         public static readonly RoutedUICommand AppAbout
             = new RoutedUICommand("О приложении..."
                 , nameof(AppAbout)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.F1, ModifierKeys.Control | ModifierKeys.Shift), });
 
         /// <summary> Переключится на следующую вкладку </summary>
         public static readonly RoutedUICommand TabSwitchToNext
             = new RoutedUICommand("О приложении..."
                 , nameof(TabSwitchToNext)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.PageUp, ModifierKeys.Control | ModifierKeys.Shift), });
 
         /// <summary> Переключится на предыдущую вкладку </summary>
         public static readonly RoutedUICommand TabSwitchToPrev
             = new RoutedUICommand("О приложении..."
                 , nameof(TabSwitchToPrev)
-                , typeof(AppCommands)
+                , typeof(CommandsOfApp)
                 , new InputGestureCollection() { new KeyGesture(Key.PageDown, ModifierKeys.Control | ModifierKeys.Shift), });
     }
 

@@ -21,28 +21,28 @@ namespace LLA.GUI
 
         private void BindCommands()
         {
-            CommandBindings.Add(new CommandBinding(AppCommands.FileCreate, CommandFileCreate_Executed, CommandFileCreate_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.FileOpen, CommandFileOpen_Executed, CommandFileOpen_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.FilesOpenLastSession, CommandFilesOpenLastSession_Executed, CommandFilesOpenLastSession_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.FileSave, CommandFileSave_Executed, CommandFileSave_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.FileSaveAs, FileSaveAs_CommandExecuted, CommandFileSaveAs_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.FilesSaveAll, CommandFilesSaveAll_Executed, CommandFilesSaveAll_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.FileClose, CommandFileClose_Executed, CommandFileClose_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FileCreate, CommandFileCreate_Executed, CommandFileCreate_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FileOpen, CommandFileOpen_Executed, CommandFileOpen_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FilesOpenLastSession, CommandFilesOpenLastSession_Executed, CommandFilesOpenLastSession_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FileSave, CommandFileSave_Executed, CommandFileSave_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FileSaveAs, FileSaveAs_CommandExecuted, CommandFileSaveAs_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FilesSaveAll, CommandFilesSaveAll_Executed, CommandFilesSaveAll_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.FileClose, CommandFileClose_Executed, CommandFileClose_CanExecute));
             //
-            CommandBindings.Add(new CommandBinding(AppCommands.TabSwitchToNext, CommandTabSwitchToNext_Executed, CommandTabSwitchToNext_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.TabSwitchToPrev, CommandTabSwitchToPrev_Executed, CommandTabSwitchToPrev_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.TabSwitchToNext, CommandTabSwitchToNext_Executed, CommandTabSwitchToNext_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.TabSwitchToPrev, CommandTabSwitchToPrev_Executed, CommandTabSwitchToPrev_CanExecute));
             //
-            CommandBindings.Add(new CommandBinding(AppCommands.Print, CommandPrint_Executed, CommandPrint_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.Print, CommandPrint_Executed, CommandPrint_CanExecute));
             //
-            CommandBindings.Add(new CommandBinding(AppCommands.AppClose, CommandAppClose_Executed, CommandAppClose_CanExecute));
-            //
-            //
-            CommandBindings.Add(new CommandBinding(AppCommands.Undo, CommandUndo_Executed, CommandUndo_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.Redo, CommandRedo_Executed, CommandRedo_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.AppClose, CommandAppClose_Executed, CommandAppClose_CanExecute));
             //
             //
-            CommandBindings.Add(new CommandBinding(AppCommands.AppSettings, CommandAppSettings_Executed, CommandAppSettings_CanExecute));
-            CommandBindings.Add(new CommandBinding(AppCommands.AppAbout, CommandAppAbout_Executed, CommandAppAbout_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.Undo, CommandUndo_Executed, CommandUndo_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.Redo, CommandRedo_Executed, CommandRedo_CanExecute));
+            //
+            //
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.AppSettings, CommandAppSettings_Executed, CommandAppSettings_CanExecute));
+            CommandBindings.Add(new CommandBinding(CommandsOfApp.AppAbout, CommandAppAbout_Executed, CommandAppAbout_CanExecute));
         }
 
         private WordsTable GetSelectedWordsTable()
