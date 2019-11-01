@@ -11,20 +11,145 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
 
 namespace LLA.GUI.Dialogs
 {
-    /// <summary>
-    /// Interaction logic for Words_AddNewItem.xaml
-    /// </summary>
+    public partial class Words_Create
+    {
+        public DateTime CreatedAt
+        {
+            get { return (DateTime) GetValue(CreatedAtProperty); }
+            set { SetValue(CreatedAtProperty, value); }
+        }
+
+        public static readonly DependencyProperty CreatedAtProperty =
+            DependencyProperty.Register(nameof(CreatedAt), typeof(DateTime), typeof(Words_Create), new PropertyMetadata(default(DateTime)));
+
+
+        public DateTime ModifiedAt
+        {
+            get { return (DateTime) GetValue(ModifiedAtProperty); }
+            set { SetValue(ModifiedAtProperty, value); }
+        }
+
+        public static readonly DependencyProperty ModifiedAtProperty =
+            DependencyProperty.Register(nameof(ModifiedAt), typeof(DateTime), typeof(Words_Create), new PropertyMetadata(default(DateTime)));
+
+        public Int32 Version
+        {
+            get { return (Int32) GetValue(VersionProperty); }
+            set { SetValue(VersionProperty, value); }
+        }
+
+        public static readonly DependencyProperty VersionProperty =
+            DependencyProperty.Register(nameof(Version), typeof(Int32), typeof(Words_Create), new PropertyMetadata(default(Int32)));
+
+        public Guid WordUid
+        {
+            get { return (Guid) GetValue(WordUidProperty); }
+            set { SetValue(WordUidProperty, value); }
+        }
+
+        public static readonly DependencyProperty WordUidProperty =
+            DependencyProperty.Register(nameof(Uid), typeof(Guid), typeof(Words_Create), new PropertyMetadata(default(Guid)));
+
+        public Int32 LessonNumber
+        {
+            get { return (Int32) GetValue(LessonNumberProperty); }
+            set { SetValue(LessonNumberProperty, value); }
+        }
+
+        public static readonly DependencyProperty LessonNumberProperty =
+            DependencyProperty.Register(nameof(LessonNumber), typeof(Int32), typeof(Words_Create), new PropertyMetadata(default(Int32)));
+
+        public Int32 WordOrder
+        {
+            get { return (Int32) GetValue(WordOrderProperty); }
+            set { SetValue(WordOrderProperty, value); }
+        }
+
+        public static readonly DependencyProperty WordOrderProperty =
+            DependencyProperty.Register(nameof(WordOrder), typeof(Int32), typeof(Words_Create), new PropertyMetadata(default(Int32)));
+
+        public String WritingEng
+        {
+            get { return (String) GetValue(WritingEngProperty); }
+            set { SetValue(WritingEngProperty, value); }
+        }
+
+        public static readonly DependencyProperty WritingEngProperty =
+            DependencyProperty.Register(nameof(WritingEng), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+
+        public String Speling
+        {
+            get { return (String) GetValue(SpelingProperty); }
+            set { SetValue(SpelingProperty, value); }
+        }
+
+        public static readonly DependencyProperty SpelingProperty =
+            DependencyProperty.Register(nameof(Speling), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+        
+        public String SpelingByUkr
+        {
+            get { return (String)GetValue(SpelingByUkrProperty); }
+            set { SetValue(SpelingByUkrProperty, value); }
+        }
+
+        public static readonly DependencyProperty SpelingByUkrProperty =
+            DependencyProperty.Register(nameof(SpelingByUkr), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+
+        public String WritingUkr
+        {
+            get { return (String) GetValue(WritingUkrProperty); }
+            set { SetValue(WritingUkrProperty, value); }
+        }
+
+        public static readonly DependencyProperty WritingUkrProperty =
+            DependencyProperty.Register(nameof(WritingUkr), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+
+        public String RemarksUkr
+        {
+            get { return (String) GetValue(RemarksUkrProperty); }
+            set { SetValue(RemarksUkrProperty, value); }
+        }
+
+        public static readonly DependencyProperty RemarksUkrProperty =
+            DependencyProperty.Register(nameof(RemarksUkr), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+        
+        public String SpelingByRus
+        {
+            get { return (String)GetValue(SpelingByRusProperty); }
+            set { SetValue(SpelingByRusProperty, value); }
+        }
+
+        public static readonly DependencyProperty SpelingByRusProperty =
+            DependencyProperty.Register(nameof(SpelingByRus), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+
+        public String WritingRus
+        {
+            get { return (String) GetValue(WritingRusProperty); }
+            set { SetValue(WritingRusProperty, value); }
+        }
+
+        public static readonly DependencyProperty WritingRusProperty =
+            DependencyProperty.Register(nameof(WritingRus), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+
+        public String RemarksRus
+        {
+            get { return (String) GetValue(RemarksRusProperty); }
+            set { SetValue(RemarksRusProperty, value); }
+        }
+
+        public static readonly DependencyProperty RemarksRusProperty =
+            DependencyProperty.Register(nameof(RemarksRus), typeof(String), typeof(Words_Create), new PropertyMetadata(default(String)));
+    }
+
     public partial class Words_Create : Window
     {
-        public CWord Word { get; set; }
-
         public Words_Create()
         {
             InitializeComponent();
-            Word = new CWord();
             SetBindingsAndHandlers();
         }
 
@@ -39,8 +164,8 @@ namespace LLA.GUI.Dialogs
             {
                 Binding bind = new Binding()
                 {
-                    Source = Word,
-                    Path = new PropertyPath(nameof(Word.WritingEng)),
+                    Source = this,
+                    Path = new PropertyPath(nameof(WritingEng)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(engWriting, TextBox.TextProperty, bind);
@@ -52,8 +177,8 @@ namespace LLA.GUI.Dialogs
             {
                 Binding bind = new Binding()
                 {
-                    Source = Word,
-                    Path = new PropertyPath(nameof(Word.Speling)),
+                    Source = this,
+                    Path = new PropertyPath(nameof(Speling)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(engSpeling, TextBox.TextProperty, bind);
@@ -63,28 +188,26 @@ namespace LLA.GUI.Dialogs
             TextBox engSpelingByUkr = Ctrl_EngSpelingByUkr;
             if(engSpelingByUkr != null)
             {
-                //TODO - modify class CWord
-                //Binding bind = new Binding()
-                //{
-                //    Source = Word,
-                //    Path = new PropertyPath(nameof(Word.Word_EngSpeling)),
-                //    Mode = BindingMode.TwoWay
-                //};
-                //BindingOperations.SetBinding(engSpelingByUkr, TextBox.TextProperty, bind);
+                Binding bind = new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(SpelingByUkr)),
+                    Mode = BindingMode.TwoWay
+                };
+                BindingOperations.SetBinding(engSpelingByUkr, TextBox.TextProperty, bind);
                 engSpelingByUkr.GotKeyboardFocus += (sender, e) => InputLanguageManager.Current.CurrentInputLanguage = cultureUkr;
             }
 
             TextBox engSpelingByRus = Ctrl_EngSpelingByRus;
             if (engSpelingByRus != null)
             {
-                //TODO - modify class CWord
-                //Binding bind = new Binding()
-                //{
-                //    Source = Word,
-                //    Path = new PropertyPath(nameof(Word.Word_EngSpeling)),
-                //    Mode = BindingMode.TwoWay
-                //};
-                //BindingOperations.SetBinding(engSpelingByRus, TextBox.TextProperty, bind);
+                Binding bind = new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(SpelingByRus)),
+                    Mode = BindingMode.TwoWay
+                };
+                BindingOperations.SetBinding(engSpelingByRus, TextBox.TextProperty, bind);
                 engSpelingByRus.GotKeyboardFocus += (sender, e) => InputLanguageManager.Current.CurrentInputLanguage = cultureRus;
             }
 
@@ -93,8 +216,8 @@ namespace LLA.GUI.Dialogs
             {
                 Binding bind = new Binding()
                 {
-                    Source = Word,
-                    Path = new PropertyPath(nameof(Word.WritingUkr)),
+                    Source = this,
+                    Path = new PropertyPath(nameof(WritingUkr)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(ukrWriting, TextBox.TextProperty, bind);
@@ -106,8 +229,8 @@ namespace LLA.GUI.Dialogs
             {
                 Binding bind = new Binding()
                 {
-                    Source = Word,
-                    Path = new PropertyPath(nameof(Word.RemarksUkr)),
+                    Source = this,
+                    Path = new PropertyPath(nameof(RemarksUkr)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(ukrRemarks, TextBox.TextProperty, bind);
@@ -119,8 +242,8 @@ namespace LLA.GUI.Dialogs
             {
                 Binding bind = new Binding()
                 {
-                    Source = Word,
-                    Path = new PropertyPath(nameof(Word.WritingRus)),
+                    Source = this,
+                    Path = new PropertyPath(nameof(WritingRus)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(rusWriting, TextBox.TextProperty, bind);
@@ -132,8 +255,8 @@ namespace LLA.GUI.Dialogs
             {
                 Binding bind = new Binding()
                 {
-                    Source = Word,
-                    Path = new PropertyPath(nameof(Word.RemarksRus)),
+                    Source = this,
+                    Path = new PropertyPath(nameof(RemarksRus)),
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(rusWriting, TextBox.TextProperty, bind);

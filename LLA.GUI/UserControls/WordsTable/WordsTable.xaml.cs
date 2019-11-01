@@ -75,6 +75,7 @@ namespace LLA.GUI
             Words.CollectionChanged += WordsOnCollectionChanged;
 
             InitializeDatagrid(ctrl_WordsTable);
+            this.Loaded += (sender, args) => { ParentWindow ??= Window.GetWindow(this); };
         }
 
         
@@ -84,12 +85,6 @@ namespace LLA.GUI
             NotSaved = true;
         }
 
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            ParentWindow = Window.GetWindow(this);
-            BindCommandsAndHandlers(ParentWindow, ctrl_WordsTable);
-        }
 
         private void BindCommandsAndHandlers(Window parentWindow, DataGrid ctrl)
         {
@@ -131,6 +126,7 @@ namespace LLA.GUI
             //
             InitializeDatagridColumns(ctrl);
             InitializeDatagridContextMenu(ctrl);
+            BindCommandsAndHandlers(ParentWindow, ctrl_WordsTable);
             //
             ctrl.ItemsSource = Words;
         }
@@ -363,6 +359,10 @@ namespace LLA.GUI
             WordsTable wordsTable = new WordsTable();
             wordsTable.LoadDictionary(fileName);
             TabItem tabItem = new TabItem() { Content = wordsTable };
+            //tabItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#364E6F"));
+            //tabItem.Foreground = Brushes.White;
+            tabItem.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#293955"));
+            tabItem.CommandBindings.Clear();
 
             Binding headerBinding = new Binding { Source = wordsTable, Path = new PropertyPath(nameof(Header)), Mode = BindingMode.OneWay };
             BindingOperations.SetBinding(tabItem, TabItem.HeaderProperty, headerBinding);
@@ -503,7 +503,22 @@ namespace LLA.GUI
             if (newItemDialog.ShowDialog() != true) return;
             DataGrid ctrl = ctrl_WordsTable;
             ctrl.ItemsSource = null;
-            CWord word = newItemDialog.Word;
+            CWord word = new CWord
+            {
+                //TODO
+                //LessonNumber = 1,
+                //WordOrder = 1,
+                WritingEng = newItemDialog.WritingEng,
+                Speling = newItemDialog.Speling,
+                //
+                SpelingByUkr = newItemDialog.SpelingByUkr,
+                WritingUkr = newItemDialog.WritingUkr,
+                RemarksUkr = newItemDialog.RemarksUkr,
+                //
+                SpelingByRus = newItemDialog.SpelingByRus,
+                WritingRus = newItemDialog.WritingRus,
+                RemarksRus = newItemDialog.RemarksRus
+            }; 
             //word.CreatedAt = DateTime.Now;
             Words.Add(word);
             ctrl.ItemsSource = Words;

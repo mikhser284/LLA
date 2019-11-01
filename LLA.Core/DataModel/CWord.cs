@@ -8,7 +8,7 @@ namespace LLA.Core
     [JsonObject("word")]
     public class CWord : INotifyPropertyChanged
     {
-        public DateTime _createdAt;
+        private DateTime _createdAt;
         [JsonProperty("0", Order = 1)]
         public DateTime CreatedAt
         {
@@ -21,7 +21,7 @@ namespace LLA.Core
         }
 
 
-        public DateTime _modifiedAt;
+        private DateTime _modifiedAt;
         [JsonProperty("11", Order = 12)]
         public DateTime ModifiedAt
         {
@@ -34,7 +34,7 @@ namespace LLA.Core
         }
 
 
-        public Int32 _version;
+        private Int32 _version;
         [JsonProperty("12", Order = 13)]
         public Int32 Version
         {
@@ -47,7 +47,7 @@ namespace LLA.Core
         }
 
 
-        public Guid _uid;
+        private Guid _uid;
         [JsonProperty("13", Order = 14)]
         public Guid Uid
         {
@@ -60,7 +60,7 @@ namespace LLA.Core
         }
 
 
-        public Int32 _lessonNumber;
+        private Int32 _lessonNumber;
         [JsonProperty("1", Order = 2)]
         public Int32 LessonNumber
         {
@@ -73,7 +73,7 @@ namespace LLA.Core
         }
 
 
-        public Int32 _wordOrder;
+        private Int32 _wordOrder;
         [JsonProperty("2", Order = 3)]
         public Int32 WordOrder
         {
@@ -84,9 +84,9 @@ namespace LLA.Core
                 OnPropChanged(nameof(_wordOrder));
             }
         }
-        
 
-        public String _writingEng;
+
+        private String _writingEng;
         [JsonProperty("3", Order = 4)]
         public String WritingEng
         {
@@ -97,9 +97,9 @@ namespace LLA.Core
                 OnPropChanged(nameof(WritingEng));
             }
         }
-        
 
-        public String _speling;
+
+        private String _speling;
         [JsonProperty("4", Order = 5)]
         public String Speling
         {
@@ -112,59 +112,7 @@ namespace LLA.Core
         }
 
 
-        public String _writingUkr;
-        [JsonProperty("5", Order = 6)]
-        public String WritingUkr
-        {
-            get { return _writingUkr; }
-            set
-            {
-                _writingUkr = value;
-                OnPropChanged(nameof(WritingUkr));
-            }
-        }
-
-
-        public String _remarksUkr;
-        [JsonProperty("6", Order = 7)]
-        public String RemarksUkr
-        {
-            get { return _remarksUkr; }
-            set
-            {
-                _remarksUkr = value;
-                OnPropChanged(nameof(RemarksUkr));
-            }
-        }
-
-
-        public String _writingRus;
-        [JsonProperty("7", Order = 8)]
-        public String WritingRus
-        {
-            get { return _writingRus; }
-            set
-            {
-                _writingRus = value;
-                OnPropChanged(nameof(WritingRus));
-            }
-        }
-
-
-        public String _remarksRus;
-        [JsonProperty("8", Order = 9)]
-        public String RemarksRus
-        {
-            get { return _remarksRus; }
-            set
-            {
-                _remarksRus = value;
-                OnPropChanged(nameof(RemarksRus));
-            }
-        }
-
-
-        public String _spelingByUkr;
+        private String _spelingByUkr;
         [JsonProperty("9", Order = 10)]
         public String SpelingByUkr
         {
@@ -177,7 +125,33 @@ namespace LLA.Core
         }
 
 
-        public String _spelingByRus;
+        private String _writingUkr;
+        [JsonProperty("5", Order = 6)]
+        public String WritingUkr
+        {
+            get { return _writingUkr; }
+            set
+            {
+                _writingUkr = value;
+                OnPropChanged(nameof(WritingUkr));
+            }
+        }
+
+
+        private String _remarksUkr;
+        [JsonProperty("6", Order = 7)]
+        public String RemarksUkr
+        {
+            get { return _remarksUkr; }
+            set
+            {
+                _remarksUkr = value;
+                OnPropChanged(nameof(RemarksUkr));
+            }
+        }
+
+        
+        private String _spelingByRus;
         [JsonProperty("10", Order = 11)]
         public String SpelingByRus
         {
@@ -190,7 +164,33 @@ namespace LLA.Core
         }
 
 
-        public EWordLearningSheduler _learningSheduler;
+        private String _writingRus;
+        [JsonProperty("7", Order = 8)]
+        public String WritingRus
+        {
+            get { return _writingRus; }
+            set
+            {
+                _writingRus = value;
+                OnPropChanged(nameof(WritingRus));
+            }
+        }
+
+
+        private String _remarksRus;
+        [JsonProperty("8", Order = 9)]
+        public String RemarksRus
+        {
+            get { return _remarksRus; }
+            set
+            {
+                _remarksRus = value;
+                OnPropChanged(nameof(RemarksRus));
+            }
+        }
+
+
+        private EWordLearningSheduler _learningSheduler;
         [JsonProperty("14", Order = 15)]
         public EWordLearningSheduler LearningSheduler
         {
@@ -206,8 +206,12 @@ namespace LLA.Core
         public CWord()
         {
             _createdAt = DateTime.Now;
+            _modifiedAt = _createdAt;
+            _version = 1;
             _uid = Guid.NewGuid();
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropChanged([CallerMemberName] String prop = "")
