@@ -1,25 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace LLA.Core
 {
-    /// <summary> Результаты проверки знаний </summary>
-    public enum EWordKnowledgeTestResult
-    {
-        /// <summary> Неудачно </summary>
-        Failed = -1,
-        /// <summary> Тест пройден </summary>
-        Passed = 1
-    }
-
-    public enum EWordLearningSheduler
-    {
-        Manual = 0,
-        Auto = 1,
-    }
-
     public class RepInterval
     {
         public Int32 Order { get; }

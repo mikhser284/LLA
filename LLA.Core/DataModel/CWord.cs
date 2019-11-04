@@ -2,13 +2,31 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LLA.Core.DataModel;
 
 namespace LLA.Core
 {
     [JsonObject("word")]
     public class CWord : INotifyPropertyChanged
     {
-        private DateTime _createdAt;
+        private DateTime                _createdAt;
+        private DateTime                _modifiedAt;
+        private Int32                   _version;
+        private Guid                    _uid;
+        private Int32                   _lessonNumber;
+        private Int32                   _wordOrder;
+        private String                  _writingEng;
+        private String                  _speling;
+
+        private String                  _spelingByUkr;
+        private String                  _writingUkr;
+        private String                  _remarksUkr;
+
+        private String                  _spelingByRus;
+        private String                  _writingRus;
+        private String                  _remarksRus;
+        private EWordLearningStatus     _learningStatus;
+
         [JsonProperty("0", Order = 1)]
         public DateTime CreatedAt
         {
@@ -19,9 +37,7 @@ namespace LLA.Core
                 OnPropChanged(nameof(CreatedAt));
             }
         }
-
-
-        private DateTime _modifiedAt;
+        
         [JsonProperty("11", Order = 12)]
         public DateTime ModifiedAt
         {
@@ -32,9 +48,7 @@ namespace LLA.Core
                 OnPropChanged(nameof(ModifiedAt));
             }
         }
-
-
-        private Int32 _version;
+        
         [JsonProperty("12", Order = 13)]
         public Int32 Version
         {
@@ -45,9 +59,7 @@ namespace LLA.Core
                 OnPropChanged(nameof(Version));
             }
         }
-
-
-        private Guid _uid;
+        
         [JsonProperty("13", Order = 14)]
         public Guid Uid
         {
@@ -58,9 +70,7 @@ namespace LLA.Core
                 OnPropChanged(nameof(Uid));
             }
         }
-
-
-        private Int32 _lessonNumber;
+        
         [JsonProperty("1", Order = 2)]
         public Int32 LessonNumber
         {
@@ -73,7 +83,6 @@ namespace LLA.Core
         }
 
 
-        private Int32 _wordOrder;
         [JsonProperty("2", Order = 3)]
         public Int32 WordOrder
         {
@@ -86,7 +95,6 @@ namespace LLA.Core
         }
 
 
-        private String _writingEng;
         [JsonProperty("3", Order = 4)]
         public String WritingEng
         {
@@ -99,7 +107,6 @@ namespace LLA.Core
         }
 
 
-        private String _speling;
         [JsonProperty("4", Order = 5)]
         public String Speling
         {
@@ -112,7 +119,6 @@ namespace LLA.Core
         }
 
 
-        private String _spelingByUkr;
         [JsonProperty("9", Order = 10)]
         public String SpelingByUkr
         {
@@ -125,7 +131,6 @@ namespace LLA.Core
         }
 
 
-        private String _writingUkr;
         [JsonProperty("5", Order = 6)]
         public String WritingUkr
         {
@@ -138,7 +143,6 @@ namespace LLA.Core
         }
 
 
-        private String _remarksUkr;
         [JsonProperty("6", Order = 7)]
         public String RemarksUkr
         {
@@ -151,7 +155,6 @@ namespace LLA.Core
         }
 
         
-        private String _spelingByRus;
         [JsonProperty("10", Order = 11)]
         public String SpelingByRus
         {
@@ -164,7 +167,6 @@ namespace LLA.Core
         }
 
 
-        private String _writingRus;
         [JsonProperty("7", Order = 8)]
         public String WritingRus
         {
@@ -177,7 +179,6 @@ namespace LLA.Core
         }
 
 
-        private String _remarksRus;
         [JsonProperty("8", Order = 9)]
         public String RemarksRus
         {
@@ -190,15 +191,14 @@ namespace LLA.Core
         }
 
 
-        private EWordLearningSheduler _learningSheduler;
         [JsonProperty("14", Order = 15)]
-        public EWordLearningSheduler LearningSheduler
+        public EWordLearningStatus LearningStatus
         {
-            get { return _learningSheduler; }
+            get { return _learningStatus; }
             set
             {
-                _learningSheduler = value;
-                OnPropChanged(nameof(LearningSheduler));
+                _learningStatus = value;
+                OnPropChanged(nameof(LearningStatus));
             }
         }
 
@@ -209,6 +209,7 @@ namespace LLA.Core
             _modifiedAt = _createdAt;
             _version = 1;
             _uid = Guid.NewGuid();
+            _learningStatus = EWordLearningStatus.ToLearning;
         }
 
 

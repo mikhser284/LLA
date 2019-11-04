@@ -7,48 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <StackPanel>
-        <GroupBox>
-            <GroupBox.Header>
-                <Label Content="Изучение новых слов"/>
-            </GroupBox.Header>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="10"/>
-                    <ColumnDefinition Width="Auto" MinWidth="10"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto" MinWidth="10"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto" MinWidth="10"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                
-                <Label Grid.Row="0" Grid.Column="0" Content="План по изучению:"/>
-                <Label Grid.Row="0" Grid.Column="1" Content="от"/>
-                <TextBlock Grid.Row="0" Grid.Column="2" Margin="3"/>
-                <Label Grid.Row="0" Grid.Column="3" Content="до"/>
-                <TextBlock Grid.Row="0" Grid.Column="4" Margin="3"/>
-                <Label Grid.Row="0" Grid.Column="5" Content="новых слов/день"/>
+    <DataGrid>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Повторение №"/>
+            <DataGridTextColumn Header="Приоритет"/>
+            <DataGridTextColumn Header="Приступить (желаемое время)"/>
+            <DataGridTextColumn Header="Следующее повторение через"/>
+            <DataGridTextColumn Header="План от ... слов"/>
+            <DataGridTextColumn Header="План до ... слов"/>
+            <DataGridTextColumn Header="Удач"/>
+            <DataGridTextColumn Header="Ошибок"/>
+        </DataGrid.Columns>
+    </DataGrid>
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Перейти к повторению:"/>
-                <Label Grid.Row="1" Grid.Column="1" Content="после"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Margin="3"/>
-                <Label Grid.Row="1" Grid.Column="5" Content="удачных попыток"/>
-                
-                <Label Grid.Row="2" Grid.Column="0" Content="Отложить на следующий раз:"/>
-                <Label Grid.Row="2" Grid.Column="1" Content="после"/>
-                <TextBlock Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3" Margin="3"/>
-                <Label Grid.Row="2" Grid.Column="5" Content="неудачных попыток"/>
-
-                <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Content="План по повторению изученных слов" HorizontalAlignment="Center" FontWeight="Bold"/>
-            </Grid>
-        </GroupBox>
-    </StackPanel>
-    
 </UserControl>

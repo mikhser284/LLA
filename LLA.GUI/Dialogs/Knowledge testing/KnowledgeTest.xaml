@@ -24,10 +24,10 @@
                 </Grid.RowDefinitions>
 
                 <Label Name="Ctrl_UrkWriting_Name" Grid.Column="0" Grid.Row="0" Content="Написание:"/>
-                <Label Name="Ctrl_UrkWriting_Value" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                <Label Name="Ctrl_UrkWriting_DisplayName" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
                 <Label Name="Ctrl_UkrRemarks_Name" Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
-                <Label Name="Ctrl_UkrRemarks_Value" Grid.Column="1" Grid.Row="1" Margin="3"/>
+                <Label Name="Ctrl_UkrRemarks_DisplayName" Grid.Column="1" Grid.Row="1" Margin="3"/>
             </Grid>
         </GroupBox>
 
@@ -46,10 +46,10 @@
                 </Grid.RowDefinitions>
 
                 <Label Name="Ctrl_RusWriting_Name" Grid.Column="0" Grid.Row="0" Content="Написание:"/>
-                <Label Name="Ctrl_RusWriting_Value" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                <Label Name="Ctrl_RusWriting_DisplayName" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
                 <Label Name="Ctrl_RusRemarks_Name" Grid.Column="0" Grid.Row="1" Content="Примечания:"/>
-                <Label Name="Ctrl_RusRemarks_Value" Grid.Column="1" Grid.Row="1" Margin="3"/>
+                <Label Name="Ctrl_RusRemarks_DisplayName" Grid.Column="1" Grid.Row="1" Margin="3"/>
             </Grid>
         </GroupBox>
 
@@ -69,13 +69,13 @@
                 </Grid.RowDefinitions>
 
                 <Label Name="Ctrl_EngSynonims_Name" Grid.Column="0" Grid.Row="0" Content="Синонимы:"/>
-                <Label Name="Ctrl_EngSynonims_Value" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                <Label Name="Ctrl_EngSynonims_DisplayName" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
                 <Label  Name="Ctrl_UserAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="1" Content="Ваш ответ:" FontWeight="Bold"/>
-                <TextBox Name="Ctrl_UserAnswer_EngWriting_Value" Grid.Column="1" Grid.Row="1" Margin="3" />
+                <TextBox Name="Ctrl_UserAnswer_EngWriting_DisplayName" Grid.Column="1" Grid.Row="1" Margin="3" />
 
                 <Label Name="Ctrl_BRightAnswer_EngWriting_Name" Grid.Column="0" Grid.Row="2" Content="Верный ответ:" FontWeight="Bold"/>
-                <Label Name="Ctrl_ARightAnswer_EngWriting_Value" Grid.Column="1" Grid.Row="2" Margin="3"/>
+                <Label Name="Ctrl_ARightAnswer_EngWriting_DisplayName" Grid.Column="1" Grid.Row="2" Margin="3"/>
             </Grid>
         </GroupBox>
         

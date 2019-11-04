@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,12 +21,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LLA.Core.DataModel;
 using Path = System.IO.Path;
 
 
 namespace LLA.GUI
 {
-    //Properties
     public partial class WordsTable
     {
         public String Header
@@ -65,6 +67,39 @@ namespace LLA.GUI
 
         public ObservableCollection<CWord> Words { get; set; }
     }
+
+
+    public class EnumConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value == null ? DependencyProperty.UnsetValue : ((Enum)value).GetDisplayName();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            Type enumType = parameter as Type;
+            String enumDisplayName = value as String;
+            
+            return Ext_Enum.GetEnumValue(enumType, enumDisplayName);
+        }
+
+        public static string GetDescription(Enum en)
+        {
+            Type type = en.GetType();
+            MemberInfo[] memInfo = type.GetMember(en.ToString());
+            if (memInfo != null && memInfo.Length > 0)
+            {
+                object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                if (attrs != null && attrs.Length > 0)
+                {
+                    return ((DescriptionAttribute)attrs[0]).Description;
+                }
+            }
+            return en.ToString();
+        }
+    }
+
 
     public partial class WordsTable : UserControl
     {
@@ -133,7 +168,9 @@ namespace LLA.GUI
 
         private void InitializeDatagridColumns(DataGrid ctrl)
         {
-            CWord word = null;
+            CWord word;
+            var enumConverter = new EnumConverter();
+
             DataGridTextColumn lessonNumber = new DataGridTextColumn
             {
                 Header = "Урок",
@@ -180,18 +217,14 @@ namespace LLA.GUI
                 Binding = new Binding(nameof(word.RemarksRus)) { Mode = BindingMode.TwoWay }
             };
             //
-            DataGridComboBoxColumn learningSheduler = new DataGridComboBoxColumn()
+
+            DataGridTextColumn learningSheduler = new DataGridTextColumn()
             {
-                Header = "Планировщик изучения",
-                
+                Header = "Изучение",
+                //ItemsSource = Ext_Enum.GetUiAvailableDisplayNames<EWordLearningStatus>(),
+                Binding = new Binding(nameof(word.LearningStatus)) { Mode = BindingMode.OneWay, Converter = enumConverter, ConverterParameter = typeof(EWordLearningStatus) },
             };
-            Binding b = new Binding
-            {
-                Path = new PropertyPath(nameof(word.LearningSheduler)),
-                Mode = BindingMode.OneWay
-            };
-            BindingOperations.SetBinding(learningSheduler, DataGridComboBoxColumn.SelectedValuePathProperty, b);
-            // TODO
+
             DataGridTextColumn createdAt = new DataGridTextColumn
             {
                 Header = "Создано",
@@ -202,6 +235,7 @@ namespace LLA.GUI
                 Header = "Изменено",
                 Binding = new Binding(nameof(word.ModifiedAt)) { Mode = BindingMode.OneWay, StringFormat = "{0:yyyy.MM.dd-ddd\tHH:mm:ss}", ConverterCulture = CultureInfo.CurrentCulture }
             };
+
             DataGridTextColumn version = new DataGridTextColumn
             {
                 Header = "Ver.",
@@ -473,6 +507,7 @@ namespace LLA.GUI
             }
         }
     }
+
 
 
     public partial class WordsTable
