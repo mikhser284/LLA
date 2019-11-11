@@ -13,9 +13,12 @@ namespace LLA.Core
         private DateTime                _modifiedAt;
         private Int32                   _version;
         private Guid                    _uid;
+
         private Int32                   _lessonNumber;
         private Int32                   _wordOrder;
+
         private String                  _writingEng;
+        private String                  _synonims;
         private String                  _speling;
 
         private String                  _spelingByUkr;
@@ -26,6 +29,18 @@ namespace LLA.Core
         private String                  _writingRus;
         private String                  _remarksRus;
         private EWordLearningStatus     _learningStatus;
+
+        [JsonProperty("16", Order = 16)]
+        public String Synomims
+        {
+            get { return _synonims; }
+            set
+            {
+                _synonims = value;
+                OnPropChanged(nameof(Synomims));
+            }
+        }
+
 
         [JsonProperty("0", Order = 1)]
         public DateTime CreatedAt
@@ -224,6 +239,34 @@ namespace LLA.Core
                 ++Version;
             }
             PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public override string ToString()
+        {
+            return $"{WritingEng} — {WritingUkr} — {WritingRus}";
+        }
+        
+        public void Update(CWord source)
+        {
+            //_createdAt
+            _lessonNumber = source.LessonNumber;
+            _wordOrder = source.WordOrder;
+            //
+            _writingEng = source.WritingEng;
+            _synonims = source.Synomims;
+            _speling = source.Speling;
+            //
+            _spelingByUkr = source.SpelingByUkr;
+            _writingUkr = source.WritingUkr;
+            _remarksUkr = source.RemarksUkr;
+            //
+            _spelingByRus = source.SpelingByRus;
+            _writingRus = source.WritingRus;
+            _remarksRus = source.RemarksRus;
+            //
+            _learningStatus = source.LearningStatus;
+            _modifiedAt = DateTime.Now;
+            ++_version;
         }
     }
 }

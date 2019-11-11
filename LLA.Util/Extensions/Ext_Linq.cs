@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace LLA.GUI
@@ -33,6 +34,20 @@ namespace LLA.GUI
             return set;
         }
 
+        public static IEnumerable<T> Intersperse<T>(this IEnumerable<T> source, Func<T> element)
+        {
+            foreach (T value in source)
+            {
+                yield return value;
+                yield return element();
+            }
+        }
 
+        public static List<T> SplitedSet<T>(this IEnumerable<T> source,  Func<T> element)
+        {
+            List<T> splitedSet = source.Intersperse(element).ToList();
+            if (splitedSet.Count > 1) splitedSet.RemoveAt(splitedSet.Count - 1);
+            return splitedSet;
+        }
     }
 }

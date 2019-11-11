@@ -134,6 +134,8 @@ namespace LLA.GUI
             //
             //
             //
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemLearn, CommandItemLearn_Executed, CommandItemLearn_CanExecute));
+            //
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, ExecuteCommand_ItemsSaveToFile));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, ExecuteCommand_ItemsSaveToNewFile));
             //
@@ -157,7 +159,7 @@ namespace LLA.GUI
             ctrl.CanUserResizeRows = false;
             ctrl.CanUserAddRows = true;
             ctrl.BeginningEdit += Ctrl_DataGrid_Words_BeginningEdit;
-            ctrl.KeyUp += Ctrl_DataGrid_Words_KeyUp;
+            //ctrl.KeyUp += Ctrl_DataGrid_Words_KeyUp;
             //
             InitializeDatagridColumns(ctrl);
             InitializeDatagridContextMenu(ctrl);
@@ -181,10 +183,16 @@ namespace LLA.GUI
                 Header = "№ п.п.",
                 Binding = new Binding(nameof(word.WordOrder)) { Mode = BindingMode.TwoWay }
             };
+            //
             DataGridTextColumn writingEng = new DataGridTextColumn
             {
                 Header = "ENG",
                 Binding = new Binding(nameof(word.WritingEng)) { Mode = BindingMode.TwoWay }
+            };
+            DataGridTextColumn synonims = new DataGridTextColumn
+            {
+                Header = "Синонимы",
+                Binding = new Binding(nameof(word.Synomims)) { Mode = BindingMode.TwoWay }
             };
             DataGridTextColumn speling = new DataGridTextColumn
             {
@@ -256,6 +264,7 @@ namespace LLA.GUI
             ctrl.Columns.Add(lessonNumber);
             ctrl.Columns.Add(wordOrder);
             ctrl.Columns.Add(writingEng);
+            ctrl.Columns.Add(synonims);
             ctrl.Columns.Add(speling);
             ctrl.Columns.Add(writingUkr);
             ctrl.Columns.Add(remarksUkr);
@@ -437,7 +446,7 @@ namespace LLA.GUI
             }
         }
 
-        private void Ctrl_DataGrid_Words_KeyUp(object sender, KeyEventArgs e)
+        private void Ctrl_DataGrid_Words_KeyUp_(object sender, KeyEventArgs e)
         {
             //Todo get indexex of keyboard focused cell
             DataGrid ctrl = sender as DataGrid;
@@ -509,9 +518,29 @@ namespace LLA.GUI
     }
 
 
-
+    // COMMANDS
     public partial class WordsTable
     {
+        // Command FileCreate
+
+        private void CommandItemLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            CWord selectedItem = ctrl.CurrentItem as CWord;
+
+            e.CanExecute = selectedItem != null;
+        }
+
+        private void CommandItemLearn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            CWord selectedItem = ctrl.CurrentItem as CWord;
+
+            if (selectedItem == null) return;
+            KnowledgeTestDialog dialog = new KnowledgeTestDialog(selectedItem) { Owner = ParentWindow };
+            if (dialog.ShowDialog() != true) return;
+        }
+
         private void ExecuteCommand_ItemsSaveToFile(object sender, ExecutedRoutedEventArgs e)
         {
             SaveToFile();
@@ -534,32 +563,18 @@ namespace LLA.GUI
             //ctrl.Items.Refresh();
             //return;
 
-            Words_Create newItemDialog = new Words_Create() { Owner = ParentWindow };
+            Word_CreateOrEdit newItemDialog = new Word_CreateOrEdit() { Owner = ParentWindow };
             if (newItemDialog.ShowDialog() != true) return;
             DataGrid ctrl = ctrl_WordsTable;
             ctrl.ItemsSource = null;
-            CWord word = new CWord
-            {
-                //TODO
-                //LessonNumber = 1,
-                //WordOrder = 1,
-                WritingEng = newItemDialog.WritingEng,
-                Speling = newItemDialog.Speling,
-                //
-                SpelingByUkr = newItemDialog.SpelingByUkr,
-                WritingUkr = newItemDialog.WritingUkr,
-                RemarksUkr = newItemDialog.RemarksUkr,
-                //
-                SpelingByRus = newItemDialog.SpelingByRus,
-                WritingRus = newItemDialog.WritingRus,
-                RemarksRus = newItemDialog.RemarksRus
-            }; 
-            //word.CreatedAt = DateTime.Now;
-            Words.Add(word);
+
+            Words.Add(newItemDialog.GetResult());
             ctrl.ItemsSource = Words;
             //
             NotSaved = true;
         }
+
+        
 
         private void ExecuteCommand_ItemInsertNewBefore(object sender, ExecutedRoutedEventArgs e)
         {
@@ -602,7 +617,17 @@ namespace LLA.GUI
         private void ExecuteCommand_ItemEdit(object sender, ExecutedRoutedEventArgs e)
         {
             //TODO not implemented
-            MessageBox.Show("Операция \"Редактирование елемента\" не реализована");
+
+            DataGrid ctrl = ctrl_WordsTable;
+            CWord selectedItem = ctrl.CurrentItem as CWord;
+            if (selectedItem == null) return;
+
+            Word_CreateOrEdit editDialog = new Word_CreateOrEdit(selectedItem) { Owner = ParentWindow };
+            if (editDialog.ShowDialog() != true) return;
+            (ctrl.CurrentItem as CWord).Update(editDialog.GetResult());
+            ctrl.Items.Refresh();
+            
+            
         }
 
         private void ExecuteCommand_ItemsEdit(object sender, ExecutedRoutedEventArgs e)

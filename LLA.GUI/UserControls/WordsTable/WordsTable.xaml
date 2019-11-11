@@ -20,7 +20,8 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <DataGrid Name="ctrl_WordsTable" Grid.Row="1" Grid.Column="1">
+
+    <DataGrid Name="ctrl_WordsTable" Grid.Column="1">
         <DataGrid.CellStyle>
             <Style TargetType="{x:Type DataGridCell}">
                 <Style.Triggers>
@@ -47,5 +48,6 @@
                 </Style.Setters>
             </Style>
         </DataGrid.CellStyle>
-    </DataGrid>    
+    </DataGrid>
+
 </UserControl>
