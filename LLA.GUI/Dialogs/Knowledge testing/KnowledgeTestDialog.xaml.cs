@@ -334,30 +334,41 @@ namespace LLA.GUI.Dialogs
             }
 
 
-            Visibility visibilityOfRightAnswer = DialogState == EKnosledgeTestDialogState.ShowTest ? Visibility.Collapsed : Visibility.Visible;
+            //Visibility visibilityOfRightAnswer = DialogState == EKnosledgeTestDialogState.ShowTest ? Visibility.Collapsed : Visibility.Visible;
             Label rightAnswer = Ctrl_RightAnswer as Label;
             if(rightAnswer != null)
             {
-                Binding bind = new Binding
+                Binding contentBinding = new Binding
                 {
                     Source = this,
                     Path = new PropertyPath(nameof(CorrectAnswer)),
                     Mode = BindingMode.TwoWay
                 };
-                BindingOperations.SetBinding(rightAnswer, Label.ContentProperty, bind);
+                BindingOperations.SetBinding(rightAnswer, Label.ContentProperty, contentBinding);
                 Binding visibilityBinding = new Binding
                 {
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
-                    Mode = BindingMode.TwoWay,
-                    //Converter
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = CorrectAnswer
                 };
-                BindingOperations.SetBinding(rightAnswer, Label.VisibilityProperty, bind);
-                rightAnswer.Visibility = visibilityOfRightAnswer;
+                BindingOperations.SetBinding(rightAnswer, Label.VisibilityProperty, visibilityBinding);
             }
 
             Label rightAnswerHeader = Ctrl_RightAnswerHeader as Label;
-            if (rightAnswerHeader != null) rightAnswer.Visibility = visibilityOfRightAnswer;
+            if (rightAnswerHeader != null)
+            {
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = CorrectAnswer
+                };
+                BindingOperations.SetBinding(rightAnswerHeader, Label.VisibilityProperty, visibilityBinding);
+            }
 
             Label speling = Ctrl_Speling;
             if(speling != null)
@@ -369,7 +380,29 @@ namespace LLA.GUI.Dialogs
                     Mode = BindingMode.TwoWay
                 };
                 BindingOperations.SetBinding(speling, Label.ContentProperty, bind);
-                speling.Visibility = visibilityOfRightAnswer;
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = Speling
+                };
+                BindingOperations.SetBinding(speling, Label.VisibilityProperty, visibilityBinding);
+            }
+
+            Label spelingHeader = Ctrl_SpelingHeader as Label;
+            if(spelingHeader != null)
+            {
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = Speling
+                };
+                BindingOperations.SetBinding(spelingHeader, Label.VisibilityProperty, visibilityBinding);
             }
 
             Label spelingByUkr = Ctrl_SpelingByUkr as Label;
@@ -382,6 +415,29 @@ namespace LLA.GUI.Dialogs
                     Mode = BindingMode.TwoWay,
                 };
                 BindingOperations.SetBinding(spelingByUkr, Label.ContentProperty, bind);
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = SpelingByUkr
+                };
+                BindingOperations.SetBinding(spelingByUkr, Label.VisibilityProperty, visibilityBinding);
+            }
+
+            Label spelingByUkrHeader = Ctrl_SpelingByUkrHeader as Label;
+            if(spelingByUkrHeader != null)
+            {
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = SpelingByUkr
+                };
+                BindingOperations.SetBinding(spelingByUkrHeader, Label.VisibilityProperty, visibilityBinding);
             }
 
             Label spelingByRus = Ctrl_SpelingByRus as Label;
@@ -394,6 +450,29 @@ namespace LLA.GUI.Dialogs
                     Mode = BindingMode.TwoWay,
                 };
                 BindingOperations.SetBinding(spelingByRus, Label.ContentProperty, bind);
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = SpelingByRus
+                };
+                BindingOperations.SetBinding(spelingByRus, Label.VisibilityProperty, visibilityBinding);
+            }
+
+            Label spelingByRusHeader = Ctrl_SpelingByRusHeader as Label;
+            if(spelingByRusHeader != null)
+            {
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    ConverterParameter = SpelingByRus
+                };
+                BindingOperations.SetBinding(spelingByRusHeader, Label.VisibilityProperty, visibilityBinding);
             }
         }
     }
@@ -409,7 +488,8 @@ namespace LLA.GUI.Dialogs
         {
             if (!(value is EKnosledgeTestDialogState))
                 throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnosledgeTestDialogState)}\"");
-            throw new NotImplementedException();
+            EKnosledgeTestDialogState dlgState = (EKnosledgeTestDialogState)value;
+            return dlgState == EKnosledgeTestDialogState.ShowTest || parameter == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
