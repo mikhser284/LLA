@@ -159,6 +159,7 @@ namespace LLA.GUI.Dialogs
         {
             InitializeComponent();
             SetBindingsAndHanlders();
+            BindCommandsAndHandlers();
         }
 
         public KnowledgeTestDialog(CWord word)
@@ -166,6 +167,15 @@ namespace LLA.GUI.Dialogs
             InitializeComponent();
             SetProperties(word);
             SetBindingsAndHanlders();
+            BindCommandsAndHandlers();
+        }
+
+        private void BindCommandsAndHandlers()
+        {
+            CommandBindings.Add(new CommandBinding(QuizDialog_Commands.Quiz_Defer, QuizDefer_Executed, QuizDefer_CanExecute));
+            CommandBindings.Add(new CommandBinding(QuizDialog_Commands.Quiz_Check, QuizCheck_Executed, QuizCheck_CanExecute));
+            CommandBindings.Add(new CommandBinding(QuizDialog_Commands.Quiz_CheckAndClose, QuizCheckAndClose_Executed, QuizCheckAndClose_CanExecute));
+            CommandBindings.Add(new CommandBinding(QuizDialog_Commands.Quiz_CheckAndNext, QuizCheckAndNext_Executed, QuizCheckAndNext_CanExecute));
         }
 
         private void SetProperties(CWord word)
@@ -321,8 +331,8 @@ namespace LLA.GUI.Dialogs
             Label synonimsHeader = Ctrl_SynonimsHeader as Label;
             if (synonimsHeader != null) synonimsHeader.Visibility = visibilityOfSynonims;
 
-            TextBox userAnswer = Ctrl_UserAnswer as TextBox;
-            if(userAnswer != null)
+            TextBox userAnswerTBox = Ctrl_UserAnswerTBox as TextBox;
+            if(userAnswerTBox != null)
             {
                 Binding bind = new Binding
                 {
@@ -330,11 +340,39 @@ namespace LLA.GUI.Dialogs
                     Path = new PropertyPath(nameof(UserAnswer)),
                     Mode = BindingMode.TwoWay
                 };
-                BindingOperations.SetBinding(userAnswer, TextBox.TextProperty, bind);
+                BindingOperations.SetBinding(userAnswerTBox, TextBox.TextProperty, bind);
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogState_InvertedVisibilityConverter(),
+                    ConverterParameter = CorrectAnswer
+                };
+                BindingOperations.SetBinding(userAnswerTBox, Label.VisibilityProperty, visibilityBinding);
             }
 
+            Label userAnswerLbl = Ctrl_UserAnswerLbl as Label;
+            if (userAnswerLbl != null)
+            {
+                Binding bind = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(UserAnswer)),
+                    Mode = BindingMode.TwoWay
+                };
+                BindingOperations.SetBinding(userAnswerLbl, Label.ContentProperty, bind);
+                Binding visibilityBinding = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(DialogState)),
+                    Mode = BindingMode.OneWay,
+                    Converter = new DialogState_VisibilityConverter(),
+                    ConverterParameter = CorrectAnswer
+                };
+                BindingOperations.SetBinding(userAnswerLbl, Label.VisibilityProperty, visibilityBinding);
+            }
 
-            //Visibility visibilityOfRightAnswer = DialogState == EKnosledgeTestDialogState.ShowTest ? Visibility.Collapsed : Visibility.Visible;
             Label rightAnswer = Ctrl_RightAnswer as Label;
             if(rightAnswer != null)
             {
@@ -350,7 +388,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = CorrectAnswer
                 };
                 BindingOperations.SetBinding(rightAnswer, Label.VisibilityProperty, visibilityBinding);
@@ -364,7 +402,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = CorrectAnswer
                 };
                 BindingOperations.SetBinding(rightAnswerHeader, Label.VisibilityProperty, visibilityBinding);
@@ -385,7 +423,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = Speling
                 };
                 BindingOperations.SetBinding(speling, Label.VisibilityProperty, visibilityBinding);
@@ -399,7 +437,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = Speling
                 };
                 BindingOperations.SetBinding(spelingHeader, Label.VisibilityProperty, visibilityBinding);
@@ -420,7 +458,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = SpelingByUkr
                 };
                 BindingOperations.SetBinding(spelingByUkr, Label.VisibilityProperty, visibilityBinding);
@@ -434,7 +472,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = SpelingByUkr
                 };
                 BindingOperations.SetBinding(spelingByUkrHeader, Label.VisibilityProperty, visibilityBinding);
@@ -455,7 +493,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = SpelingByRus
                 };
                 BindingOperations.SetBinding(spelingByRus, Label.VisibilityProperty, visibilityBinding);
@@ -469,7 +507,7 @@ namespace LLA.GUI.Dialogs
                     Source = this,
                     Path = new PropertyPath(nameof(DialogState)),
                     Mode = BindingMode.OneWay,
-                    Converter = new DialogStateToRightAnswerVisibilityConverter(),
+                    Converter = new DialogState_VisibilityConverter(),
                     ConverterParameter = SpelingByRus
                 };
                 BindingOperations.SetBinding(spelingByRusHeader, Label.VisibilityProperty, visibilityBinding);
@@ -477,12 +515,65 @@ namespace LLA.GUI.Dialogs
         }
     }
 
+    // COMMANDS
     public partial class KnowledgeTestDialog
     {
+        // Command QuizDefer
 
+        private void QuizDefer_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void QuizDefer_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            //DataGrid ctrl = ctrl_WordsTable;
+            //CWord selectedItem = ctrl.CurrentItem as CWord;
+
+            //if (selectedItem == null) return;
+            //KnowledgeTestDialog dialog = new KnowledgeTestDialog(selectedItem) { Owner = ParentWindow };
+            //if (dialog.ShowDialog() != true) return;
+        }
+
+        // Command QuizCheck
+
+        private void QuizCheck_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void QuizCheck_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+
+        // Command QuizCheckAndClose
+
+        private void QuizCheckAndClose_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void QuizCheckAndClose_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+
+
+        // Command QuizCheckAndNext
+
+        private void QuizCheckAndNext_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void QuizCheckAndNext_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
     }
 
-    public class DialogStateToRightAnswerVisibilityConverter : IValueConverter
+    public class DialogState_VisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -490,6 +581,22 @@ namespace LLA.GUI.Dialogs
                 throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnosledgeTestDialogState)}\"");
             EKnosledgeTestDialogState dlgState = (EKnosledgeTestDialogState)value;
             return dlgState == EKnosledgeTestDialogState.ShowTest || parameter == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class DialogState_InvertedVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is EKnosledgeTestDialogState))
+                throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnosledgeTestDialogState)}\"");
+            EKnosledgeTestDialogState dlgState = (EKnosledgeTestDialogState)value;
+            return dlgState == EKnosledgeTestDialogState.ShowTest || parameter == null ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

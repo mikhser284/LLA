@@ -4,9 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LLA.GUI.Dialogs"
-      mc:Ignorable="d" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d" 
       Title="Тест знаний" SizeToContent="WidthAndHeight" MinWidth="600" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="True">
-
+    
     <StackPanel Grid.IsSharedSizeScope="True" FocusManager.FocusedElement="{Binding ElementName=Ctrl_EngWriting}" >
         <Label Name="Ctrl_DialogHeader"/>
         <GroupBox Name="Ctrl_UkrGroup" Margin="3">
@@ -91,8 +92,11 @@
 
 
 
-                <Label  Name="Ctrl_UserAnswerHeader" Grid.Column="0" Grid.Row="1" Content="Ваш ответ:" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBox Name="Ctrl_UserAnswer" Grid.Column="1" Grid.Row="1" Margin="3" VerticalAlignment="Center"/>
+                <Label  Name="Ctrl_UserAnswerHeader" Grid.Column="0" Grid.Row="1" Content="Ваш ответ:" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Grid.Row="1">
+                    <TextBox Name="Ctrl_UserAnswerTBox" Margin="3" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <Label Name="Ctrl_UserAnswerLbl" Margin="3" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
 
                 <Label Name="Ctrl_RightAnswerHeader" Grid.Column="0" Grid.Row="2" Content="Верный ответ:" VerticalAlignment="Center"/>
                 <Label Name="Ctrl_RightAnswer" Grid.Column="1" Grid.Row="2" Margin="3" FontSize="20" FontWeight="Bold" Foreground="DarkGreen" VerticalAlignment="Center"/>
@@ -108,10 +112,26 @@
             </Grid>
         </GroupBox>
         
-        <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
-            <Button Content="Проверить (3)" MinWidth="100" Margin="10" IsDefault="True" Click="Button_Click"/>
-            <Button Content="Отложить" MinWidth="100" Margin="10" IsCancel="True" />
-            <Button Content="Завершить" MinWidth="100" Margin="10" IsDefault="True" />
+        <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10"
+                    SnapsToDevicePixels="True">
+            <Button Name="Ctrl_Defer" Content="Отложить" MinWidth="100" Margin="10" IsCancel="True" BorderThickness="1"/>
+            <Border BorderBrush="#FF707070" BorderThickness="1" Margin="10">
+                <StackPanel Orientation="Horizontal"  VerticalAlignment="Center">
+                    <Button Name="Ctrl_Check" Content="Отложить" MinWidth="100" VerticalAlignment="Stretch" IsCancel="True" Background="LightGray"
+                        BorderThickness="0"/>
+                    <Menu VerticalAlignment="Stretch">
+                        <MenuItem Background="LightGray" BorderThickness="0">
+                            <MenuItem.Header>
+                                <Label Content="▼" VerticalAlignment="Stretch"></Label>
+                            </MenuItem.Header>
+                            <MenuItem Header="Проверить"/>
+                            <MenuItem Header="Проверить и далее"/>
+                            <MenuItem Header="Проверить и завершить"/>
+                        </MenuItem>
+                    </Menu>
+                    
+                </StackPanel>
+            </Border>
         </StackPanel>
     </StackPanel>
 </Window>
