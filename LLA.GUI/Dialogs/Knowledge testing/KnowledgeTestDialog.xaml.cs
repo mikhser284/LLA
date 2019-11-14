@@ -577,10 +577,10 @@ namespace LLA.GUI.Dialogs
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is EKnosledgeTestDialogState))
-                throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnosledgeTestDialogState)}\"");
-            EKnosledgeTestDialogState dlgState = (EKnosledgeTestDialogState)value;
-            return dlgState == EKnosledgeTestDialogState.ShowTest || parameter == null ? Visibility.Collapsed : Visibility.Visible;
+            if (!(value is EKnowledgeTestDialogState))
+                throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnowledgeTestDialogState)}\"");
+            EKnowledgeTestDialogState dlgState = (EKnowledgeTestDialogState)value;
+            return dlgState == EKnowledgeTestDialogState.ShowTest || parameter == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -593,10 +593,10 @@ namespace LLA.GUI.Dialogs
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is EKnosledgeTestDialogState))
-                throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnosledgeTestDialogState)}\"");
-            EKnosledgeTestDialogState dlgState = (EKnosledgeTestDialogState)value;
-            return dlgState == EKnosledgeTestDialogState.ShowTest || parameter == null ? Visibility.Visible : Visibility.Collapsed;
+            if (!(value is EKnowledgeTestDialogState))
+                throw new InvalidOperationException($"Тип данных \"{value.GetType()}\" не соответствует ожидаемому \"{nameof(EKnowledgeTestDialogState)}\"");
+            EKnowledgeTestDialogState dlgState = (EKnowledgeTestDialogState)value;
+            return dlgState == EKnowledgeTestDialogState.ShowTest || parameter == null ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
