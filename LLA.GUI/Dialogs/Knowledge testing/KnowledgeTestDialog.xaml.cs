@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace LLA.GUI.Dialogs
 {
-    public enum EKnosledgeTestDialogState
+    public enum EKnowledgeTestDialogState
     {
         ShowTest = 0,
         ShowTestResultCorrect = 1,
@@ -27,14 +27,14 @@ namespace LLA.GUI.Dialogs
     // Properties
     public partial class KnowledgeTestDialog
     {
-        public EKnosledgeTestDialogState DialogState
+        public EKnowledgeTestDialogState DialogState
         {
-            get { return (EKnosledgeTestDialogState)GetValue(DialogStateProperty); }
+            get { return (EKnowledgeTestDialogState)GetValue(DialogStateProperty); }
             private set { SetValue(DialogStateProperty, value); }
         }
 
         public static readonly DependencyProperty DialogStateProperty = DependencyProperty.Register(nameof(DialogState)
-            , typeof(EKnosledgeTestDialogState), typeof(KnowledgeTestDialog), new PropertyMetadata(default(EKnosledgeTestDialogState)));
+            , typeof(EKnowledgeTestDialogState), typeof(KnowledgeTestDialog), new PropertyMetadata(default(EKnowledgeTestDialogState)));
 
         public String WritingUkr
         {
@@ -145,7 +145,7 @@ namespace LLA.GUI.Dialogs
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            DialogState = UserAnswer == CorrectAnswer ? EKnosledgeTestDialogState.ShowTestResultCorrect : EKnosledgeTestDialogState.ShowTestResultWrong;
+            DialogState = UserAnswer == CorrectAnswer ? EKnowledgeTestDialogState.ShowTestResultCorrect : EKnowledgeTestDialogState.ShowTestResultWrong;
             SetDialogHeader();
         }
     }
@@ -206,7 +206,7 @@ namespace LLA.GUI.Dialogs
             }
             switch(DialogState)
             {
-                case EKnosledgeTestDialogState.ShowTest:
+                case EKnowledgeTestDialogState.ShowTest:
                     {
                         header.Foreground = new SolidColorBrush(Color.FromRgb(127, 191, 255));
                         header.Background = new SolidColorBrush(Color.FromRgb(218, 230, 242));
@@ -214,7 +214,7 @@ namespace LLA.GUI.Dialogs
                         header.Content = "Как правильно пишется это слово на английском?";
                         break;
                     }
-                case EKnosledgeTestDialogState.ShowTestResultCorrect:
+                case EKnowledgeTestDialogState.ShowTestResultCorrect:
                     {
                         header.Foreground = new SolidColorBrush(Color.FromRgb(0, 128, 0));
                         header.Background = new SolidColorBrush(Color.FromRgb(218, 242, 218));
@@ -222,7 +222,7 @@ namespace LLA.GUI.Dialogs
                         header.Content = "✔   Верно";
                         break;
                     }
-                case EKnosledgeTestDialogState.ShowTestResultWrong:
+                case EKnowledgeTestDialogState.ShowTestResultWrong:
                     {
                         header.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
                         header.Background = new SolidColorBrush(Color.FromRgb(242, 218, 218));
@@ -231,7 +231,7 @@ namespace LLA.GUI.Dialogs
                         break;
                     }
                 default:
-                    throw new InvalidOperationException($"Unknown value of enumeration \"{nameof(EKnosledgeTestDialogState)}\"");
+                    throw new InvalidOperationException($"Unknown value of enumeration \"{nameof(EKnowledgeTestDialogState)}\"");
             }
         }
 
