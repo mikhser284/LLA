@@ -11,12 +11,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LLA.GUI.UserControls.WordsLearningList
+namespace LLA.GUI
 {
     /// <summary>
     /// Interaction logic for WordsLearningList.xaml
     /// </summary>
-    public partial class WordsLearningList : UserControl
+    public partial class WordsLearningList : Window
     {
         public WordsLearningList()
         {

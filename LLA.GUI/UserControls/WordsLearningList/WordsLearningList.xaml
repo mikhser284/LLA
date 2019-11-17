@@ -1,18 +1,18 @@
-﻿<UserControl x:Class="LLA.GUI.UserControls.WordsLearningList.WordsLearningList"
+﻿<Window x:Class="LLA.GUI.WordsLearningList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:LLA.GUI.UserControls.WordsLearningList"
+             xmlns:local="clr-namespace:LLA.GUI"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1000">
-    <UserControl.Resources>
+             Title="Dlg 001" SizeToContent="WidthAndHeight" MinWidth="600" WindowStartupLocation="CenterOwner" ShowInTaskbar="True">
+    <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="2"/>
             <Setter Property="Padding" Value="4,1"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        </Style>
-    </UserControl.Resources>
+        </Style>        
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="100"/>
@@ -23,67 +23,277 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TreeView>
-            <TreeViewItem Header="Планирование"/>
-            <TreeViewItem Header="Изучение"/>
-            <TreeViewItem Header="Повторение">
-                <TreeViewItem Header="01 (через 2 часа)"/>
-                <TreeViewItem Header="02 (через 12 часов)"/>
-                <TreeViewItem Header="03 (через 1 день)"/>
-                <TreeViewItem Header="04 (через 2 дня)"/>
-                <TreeViewItem Header="05 (через 4 дня)"/>
-                <TreeViewItem Header="06 (через 8 дней)"/>
-                <TreeViewItem Header="07 (через 16 дней)"/>
-                <TreeViewItem Header="08 (через 32 дня)"/>
-                <TreeViewItem Header="09 (через 64 дня)"/>
-                <TreeViewItem Header="10 (через 128 дней)"/>
-            </TreeViewItem>
-            <TreeViewItem Header="Результаты"/>
-        </TreeView>
-        <Grid Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Планирование" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Stretch"/>
-                <Button Content="Изучение" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch"/>
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <TreeViewItem Header="Наполнение">
+                <TreeViewItem Header="Indexes">
+                    <TreeViewItem Header="0001 ... 1000">
+                        <TreeViewItem Header="0001 ... 1000">
+                            <TreeViewItem Header="0001 ... 0010">
+                                <TreeViewItem Header="0001">
+                                    <TreeViewItem Header="Text 001, Part 001 - Name"/>
+                                    <TreeViewItem Header="Text 001, Part 002 - Name"/>
+                                    <TreeViewItem Header="Track 001, Part 001 - Name"/>
+                                    <TreeViewItem Header="Track 002, Part 001 - Name"/>
+                                </TreeViewItem>
+                            </TreeViewItem>
+                            <TreeViewItem Header="0011 ... 0020">
 
-                    <Button Content="Повторение через ..." Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" VerticalAlignment="Stretch"/>
-                    <Button Content="2 часа" Grid.Row="1" Grid.Column="0"/>
-                    <Button Content="12 часов" Grid.Row="1" Grid.Column="1"/>
-                    <Button Content="1 день" Grid.Row="1" Grid.Column="2"/>
-                    <Button Content="2 дня" Grid.Row="1" Grid.Column="3"/>
-                    <Button Content="4 дня" Grid.Row="1" Grid.Column="4"/>
-                    <Button Content="8 дней" Grid.Row="1" Grid.Column="5"/>
-                    <Button Content="16 дней" Grid.Row="1" Grid.Column="6"/>
-                    <Button Content="32 дня" Grid.Row="1" Grid.Column="7"/>
-                    <Button Content="64 дня" Grid.Row="1" Grid.Column="8"/>
-                    <Button Content="128 дней" Grid.Row="1" Grid.Column="9"/>
-                </Grid>
-                <Button Content="Результаты" Grid.Row="0" Grid.Column="12" Grid.RowSpan="2"/>
-            </StackPanel>
-        </Grid>
+                            </TreeViewItem>
+                        </TreeViewItem>
+                        <TreeViewItem Header="0101 ... 0200">
+
+                        </TreeViewItem>
+                    </TreeViewItem>
+                    <TreeViewItem Header="1001 ... 2000">
+
+                    </TreeViewItem>
+                </TreeViewItem>                
+                <TreeViewItem Header="Texts">
+                    <TreeViewItem Header="Text 001 - Name">
+                        <TreeViewItem Header="Part 001 - Name">
+                        </TreeViewItem>
+                        <TreeViewItem Header="Part 002 - Name">
+                        </TreeViewItem>
+                        <TreeViewItem Header="Part 003 - Name">
+                        </TreeViewItem>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Text 002 - Name">
+
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem Header="Tracks">
+                    <TreeViewItem Header="Track 001 - Name">
+                        <TreeViewItem Header="Part 001 - Name">
+                        </TreeViewItem>
+                        <TreeViewItem Header="Part 002 - Name">
+                        </TreeViewItem>
+                        <TreeViewItem Header="Part 003 - Name">
+                        </TreeViewItem>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Track 002 - Name">
+
+                    </TreeViewItem>
+                </TreeViewItem>
+            </TreeViewItem>
+            <TreeViewItem Header="Изучение">
+                <TreeViewItem Header="Планирование"/>
+                <TreeViewItem Header="Изучение"/>
+                <TreeViewItem Header="Повторение" Grid.IsSharedSizeScope="True">
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">1</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">2</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">2</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">12</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">3</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">1</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">4</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">2</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">5</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">4</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">6</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">8</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">7</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">16</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">8</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">32</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">9</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">64</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_RepetionNo"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Days"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ssg_Hours"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Right">10</TextBlock>
+                                <TextBlock Grid.Column="1"> (</TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right">128</TextBlock>
+                                <TextBlock Grid.Column="3">д </TextBlock>
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Right">0</TextBlock>
+                                <TextBlock Grid.Column="5">ч)</TextBlock>
+                            </Grid>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                </TreeViewItem>
+                
+                <TreeViewItem Header="Результаты"/>
+            </TreeViewItem>
+            
+        </TreeView>        
     </Grid>
     
-</UserControl>
+</Window>

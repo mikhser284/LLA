@@ -28,7 +28,46 @@ namespace LLA.Core
         private String                  _spelingByRus;
         private String                  _writingRus;
         private String                  _remarksRus;
+        
         private EWordLearningStatus     _learningStatus;
+
+        private Boolean                 _learningSheduler;
+        private Guid?                   _learningRand;
+        private Int32?                  _learningUserPriority;
+
+
+        [JsonProperty("19", Order = 19)]
+        public Boolean LearningSheduler
+        {
+            get { return _learningSheduler; }
+            set
+            {
+                _learningSheduler = value;
+                OnPropChanged(nameof(LearningSheduler));
+            }
+        }
+
+        [JsonProperty("18", Order = 18)]
+        public Int32? LearningUserPriority
+        {
+            get { return _learningUserPriority; }
+            set
+            {
+                _learningUserPriority = value;
+                OnPropChanged(nameof(LearningUserPriority));
+            }
+        }
+
+        [JsonProperty("17", Order = 17)]
+        public Guid? LearningRand
+        {
+            get { return _learningRand; }
+            set
+            {
+                _learningRand = value;
+                OnPropChanged(nameof(LearningRand));
+            }
+        }
 
         [JsonProperty("16", Order = 16)]
         public String Synomims

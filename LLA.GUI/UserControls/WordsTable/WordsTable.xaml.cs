@@ -134,7 +134,8 @@ namespace LLA.GUI
             //
             //
             //
-            CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemLearn, CommandItemLearn_Executed, CommandItemLearn_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_ItemLearn, CommandItemLearn_Executed, CommandItemLearn_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_Dlg001, CommandDlg001_Executed, CommandDlg001_CanExecute));
             //
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToFile, ExecuteCommand_ItemsSaveToFile));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsSaveToNewFile, ExecuteCommand_ItemsSaveToNewFile));
@@ -173,6 +174,18 @@ namespace LLA.GUI
             CWord word;
             var enumConverter = new EnumConverter();
 
+            DataGridCheckBoxColumn learningSheduler = new DataGridCheckBoxColumn
+            {
+                Header = "Учить",
+                Binding = new Binding(nameof(word.LearningSheduler)) { Mode = BindingMode.TwoWay}
+            };            
+
+            DataGridTextColumn learningUserPriority = new DataGridTextColumn
+            {
+                Header = "Приор.",
+                Binding = new Binding(nameof(word.LearningUserPriority)) { Mode = BindingMode.TwoWay }
+            };
+
             DataGridTextColumn lessonNumber = new DataGridTextColumn
             {
                 Header = "Урок",
@@ -189,6 +202,7 @@ namespace LLA.GUI
                 Header = "ENG",
                 Binding = new Binding(nameof(word.WritingEng)) { Mode = BindingMode.TwoWay }
             };
+            DataGridTag.SetTag(writingEng, true);
             DataGridTextColumn synonims = new DataGridTextColumn
             {
                 Header = "Синонимы",
@@ -199,6 +213,7 @@ namespace LLA.GUI
                 Header = "Произношение",
                 Binding = new Binding(nameof(word.Speling)) { Mode = BindingMode.TwoWay }
             };
+            DataGridTag.SetTag(speling, true);
             DataGridTextColumn writingUkr = new DataGridTextColumn
             {
                 Header = "UKR",
@@ -214,6 +229,7 @@ namespace LLA.GUI
                 Header = "Произношение по UKR",
                 Binding = new Binding(nameof(word.SpelingByUkr)) { Mode = BindingMode.TwoWay }
             };
+            DataGridTag.SetTag(spelingByUkr, true);
             DataGridTextColumn writingRus = new DataGridTextColumn
             {
                 Header = "RUS",
@@ -226,23 +242,25 @@ namespace LLA.GUI
             };
             //
 
-            DataGridTextColumn learningSheduler = new DataGridTextColumn()
-            {
-                Header = "Изучение",
-                //ItemsSource = Ext_Enum.GetUiAvailableDisplayNames<EWordLearningStatus>(),
-                Binding = new Binding(nameof(word.LearningStatus)) { Mode = BindingMode.OneWay, Converter = enumConverter, ConverterParameter = typeof(EWordLearningStatus) },
-            };
+            //DataGridTextColumn learningSheduler = new DataGridTextColumn()
+            //{
+            //    Header = "Изучение",
+            //    //ItemsSource = Ext_Enum.GetUiAvailableDisplayNames<EWordLearningStatus>(),
+            //    Binding = new Binding(nameof(word.LearningStatus)) { Mode = BindingMode.OneWay, Converter = enumConverter, ConverterParameter = typeof(EWordLearningStatus) },
+            //};
 
             DataGridTextColumn createdAt = new DataGridTextColumn
             {
                 Header = "Создано",
                 Binding = new Binding(nameof(word.CreatedAt)) { Mode = BindingMode.OneWay, StringFormat = "{0:yyyy.MM.dd-ddd\tHH:mm:ss}", ConverterCulture = CultureInfo.CurrentCulture }
             };
+            DataGridTag.SetTag(createdAt, true);
             DataGridTextColumn modifiedAt = new DataGridTextColumn
             {
                 Header = "Изменено",
                 Binding = new Binding(nameof(word.ModifiedAt)) { Mode = BindingMode.OneWay, StringFormat = "{0:yyyy.MM.dd-ddd\tHH:mm:ss}", ConverterCulture = CultureInfo.CurrentCulture }
             };
+            DataGridTag.SetTag(modifiedAt, true);
 
             DataGridTextColumn version = new DataGridTextColumn
             {
@@ -254,13 +272,18 @@ namespace LLA.GUI
                 Header = "Произношение по RUS",
                 Binding = new Binding(nameof(word.SpelingByRus)) { Mode = BindingMode.TwoWay }
             };
+            DataGridTag.SetTag(spelingByRus, true);
             DataGridTextColumn uid = new DataGridTextColumn
             {
                 Header = "Uid",
                 Binding = new Binding(nameof(word.Uid)) { Mode = BindingMode.OneWay }
             };
+            DataGridTag.SetTag(uid, true);
 
 
+            ctrl.Columns.Add(learningSheduler);
+            ctrl.Columns.Add(learningUserPriority);
+            //
             ctrl.Columns.Add(lessonNumber);
             ctrl.Columns.Add(wordOrder);
             ctrl.Columns.Add(writingEng);
@@ -273,7 +296,6 @@ namespace LLA.GUI
             ctrl.Columns.Add(remarksRus);
             ctrl.Columns.Add(spelingByRus);
             //
-            ctrl.Columns.Add(learningSheduler);
             ctrl.Columns.Add(createdAt);
             ctrl.Columns.Add(modifiedAt);
             ctrl.Columns.Add(version);
@@ -521,7 +543,19 @@ namespace LLA.GUI
     // COMMANDS
     public partial class WordsTable
     {
-        // Command FileCreate
+        private void CommandDlg001_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CommandDlg001_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            WordsLearningList dlg001 = new WordsLearningList() { Owner = ParentWindow };
+            
+            if (dlg001.ShowDialog() != true) return;            
+        }
+
+
 
         private void CommandItemLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -537,9 +571,30 @@ namespace LLA.GUI
             CWord selectedItem = ctrl.CurrentItem as CWord;
 
             if (selectedItem == null) return;
+            DataGrid dg = ctrl_WordsTable as DataGrid;
+
+            foreach(var col in dg.Columns)
+            {
+                Object tag = DataGridTag.GetTag(col);
+                if (tag == null || !(tag is Boolean)) continue;
+                if ((Boolean)DataGridTag.GetTag(col)) col.Visibility = Visibility.Collapsed;
+            }
+            
             KnowledgeTestDialog dialog = new KnowledgeTestDialog(selectedItem) { Owner = ParentWindow };
-            if (dialog.ShowDialog() != true) return;
+            if (dialog.ShowDialog() == true)
+            {
+                //TODO treat results
+            }
+            foreach (var col in dg.Columns)
+            {
+                Object tag = DataGridTag.GetTag(col);
+                if (tag == null || !(tag is Boolean)) continue;
+                if ((Boolean)DataGridTag.GetTag(col)) col.Visibility = Visibility.Visible;
+            }
         }
+
+        // Command FileCreate
+
 
         private void ExecuteCommand_ItemsSaveToFile(object sender, ExecutedRoutedEventArgs e)
         {
@@ -671,6 +726,27 @@ namespace LLA.GUI
         private void ExecuteCommand_ItemsDelete(object sender, ExecutedRoutedEventArgs e)
         {
             //TODO not implemented
+        }
+    }
+
+
+
+    public static class DataGridTag
+    {
+        public static readonly DependencyProperty TagProperty = DependencyProperty.RegisterAttached(
+           "Tag",
+           typeof(object),
+           typeof(DataGridTag),
+           new FrameworkPropertyMetadata(null));
+
+        public static object GetTag(DependencyObject dependencyObject)
+        {
+            return dependencyObject.GetValue(TagProperty);
+        }
+
+        public static void SetTag(DependencyObject dependencyObject, object value)
+        {
+            dependencyObject.SetValue(TagProperty, value);
         }
     }
 }

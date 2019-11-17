@@ -7,9 +7,15 @@ namespace LLA.GUI
 {
     public static class WordsTable_Commands
     {
-        public static readonly RoutedCommand ItemLearn
+        public static readonly RoutedCommand Temp_Dlg001
+            = new RoutedUICommand("Диалог 001"
+            , nameof(Temp_Dlg001)
+            , typeof(WordsTable_Commands)
+            , new InputGestureCollection() { new KeyGesture(Key.F1) });
+
+        public static readonly RoutedCommand Temp_ItemLearn
             = new RoutedUICommand("Редактировать выделенный элемент"
-            , nameof(ItemLearn)
+            , nameof(Temp_ItemLearn)
             , typeof(WordsTable_Commands)
             , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control | ModifierKeys.Shift) });
 

@@ -8,15 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dialogs\Settings\SettingsBlock\**" />
+    <EmbeddedResource Remove="Dialogs\Settings\SettingsBlock\**" />
+    <None Remove="Dialogs\Settings\SettingsBlock\**" />
+    <Page Remove="Dialogs\Settings\SettingsBlock\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LLA.Core\LLA.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dialogs\Settings\SettingsBlock\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
