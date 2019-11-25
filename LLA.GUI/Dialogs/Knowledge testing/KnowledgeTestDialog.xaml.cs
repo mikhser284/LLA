@@ -547,8 +547,6 @@ namespace LLA.GUI.Dialogs
             DialogState = String.Compare(UserAnswer.Trim(), CorrectAnswer.Trim(), StringComparison.InvariantCultureIgnoreCase) == 0
                 ? EKnowledgeTestDialogState.ShowTestResultCorrect : EKnowledgeTestDialogState.ShowTestResultWrong;
             SetDialogHeader();
-            Window dlg = this;
-            await ShowAnswerResultAndClose(dlg);
         }
 
         async Task ShowAnswerResultAndClose(Window w)
@@ -561,12 +559,15 @@ namespace LLA.GUI.Dialogs
 
         private void QuizCheckAnswerAndGoToNextTest_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            e.CanExecute = !String.IsNullOrWhiteSpace(UserAnswer);
         }
 
-        private void QuizCheckAnswerAndGoToNextTest_Executed(object sender, ExecutedRoutedEventArgs e)
+        private async void QuizCheckAnswerAndGoToNextTest_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            DialogState = String.Compare(UserAnswer.Trim(), CorrectAnswer.Trim(), StringComparison.InvariantCultureIgnoreCase) == 0
+                ? EKnowledgeTestDialogState.ShowTestResultCorrect : EKnowledgeTestDialogState.ShowTestResultWrong;
+            SetDialogHeader();
+            await ShowAnswerResultAndClose(this);
         }
 
 
@@ -579,7 +580,8 @@ namespace LLA.GUI.Dialogs
 
         private void QuizFinishTesting_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            this.DialogResult = false;
+            this.Close();
         }
     }
 

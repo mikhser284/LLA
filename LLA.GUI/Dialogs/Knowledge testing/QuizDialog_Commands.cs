@@ -23,12 +23,12 @@ namespace LLA.GUI.Dialogs
             = new RoutedUICommand("Отложить"
             , nameof(Quiz_DeferTest)
             , typeof(QuizDialog_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.Escape)});
+            , new InputGestureCollection() { new KeyGesture(Key.Escape, ModifierKeys.Alt) });
 
         public static readonly RoutedCommand Quiz_FinishTesting
             = new RoutedUICommand("Завершить"
             , nameof(Quiz_FinishTesting)
             , typeof(QuizDialog_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.Escape, ModifierKeys.Alt)});
+            , new InputGestureCollection() { new KeyGesture(Key.Escape)});
     }
 }
