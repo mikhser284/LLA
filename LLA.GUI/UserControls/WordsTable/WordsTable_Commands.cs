@@ -7,17 +7,29 @@ namespace LLA.GUI
 {
     public static class WordsTable_Commands
     {
+        public static readonly RoutedCommand Temp_SwitchToLearnMode
+            = new RoutedUICommand("Переключится в режим изучения"
+            , nameof(Temp_SwitchToLearnMode)
+            , typeof(WordsTable_Commands)
+            , new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Alt) });
+
+        public static readonly RoutedCommand Temp_SwitchToNormalMode
+            = new RoutedUICommand("Переключится в обычный реижим"
+            , nameof(Temp_SwitchToNormalMode)
+            , typeof(WordsTable_Commands)
+            , new InputGestureCollection() { new KeyGesture(Key.N, ModifierKeys.Alt) });
+
         public static readonly RoutedCommand Temp_Dlg001
             = new RoutedUICommand("Диалог 001"
             , nameof(Temp_Dlg001)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F1) });
+            , new InputGestureCollection() { new KeyGesture(Key.F12) });
 
         public static readonly RoutedCommand Temp_ItemLearn
-            = new RoutedUICommand("Редактировать выделенный элемент"
+            = new RoutedUICommand("Показать диалог теста"
             , nameof(Temp_ItemLearn)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control | ModifierKeys.Shift) });
+            , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control) });
 
         public static readonly RoutedCommand Close
             = new RoutedUICommand("Закрыть"
@@ -71,7 +83,7 @@ namespace LLA.GUI
             = new RoutedUICommand("Редактировать выделенный элемент"
             , nameof(ItemEdit)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control) });
+            , new InputGestureCollection() { new KeyGesture(Key.Space, ModifierKeys.Control | ModifierKeys.Shift) });
 
 
         public static readonly RoutedCommand ItemsEdit

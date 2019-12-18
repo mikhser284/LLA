@@ -58,7 +58,7 @@
                     <MenuItem Header="Настройки ..." Command="local:CommandsOfApp.AppSettings"/>
                     <MenuItem Header="О программе ..." Command="local:CommandsOfApp.AppAbout"/>
                 </MenuItem>
-            </Menu>
+            </Menu>            
         </StackPanel>
 
         <TabControl Name="ctrl_Files" Grid.Row="1" Grid.Column="1" Background="#293955" BorderThickness="0"/>

@@ -210,7 +210,7 @@ namespace LLA.GUI.Dialogs
         private void SetBindingsAndHandlers()
         {
             CultureInfo cultureEng = new CultureInfo("en-US");
-            CultureInfo cultureRus = new CultureInfo("ru-UA");
+            CultureInfo cultureRus = new CultureInfo("ru-Ru");
             CultureInfo cultureUkr = new CultureInfo("uk-UA");
 
             TextBox writingEng = Ctrl_EngWriting as TextBox;

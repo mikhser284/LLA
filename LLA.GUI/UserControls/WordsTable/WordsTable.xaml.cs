@@ -23,7 +23,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LLA.Core.DataModel;
 using Path = System.IO.Path;
-
+using System.Collections;
 
 namespace LLA.GUI
 {
@@ -62,6 +62,12 @@ namespace LLA.GUI
         }
         public static readonly DependencyProperty NotSavedProperty = DependencyProperty.Register(nameof(NotSaved), typeof(Boolean), typeof(WordsTable), new PropertyMetadata(false));
 
+        public CtrlMode Mode
+        {
+            get { return (CtrlMode)GetValue(ModeProperty); }
+            private set { SetValue(ModeProperty, value); }
+        }
+        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(nameof(Mode), typeof(CtrlMode), typeof(WordsTable), new PropertyMetadata(CtrlMode.Normal));
 
         Window ParentWindow { get; set; }
 
@@ -113,26 +119,16 @@ namespace LLA.GUI
             this.Loaded += (sender, args) => { ParentWindow ??= Window.GetWindow(this); };
         }
 
-        
-
         private void WordsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             NotSaved = true;
         }
 
-
         private void BindCommandsAndHandlers(Window parentWindow, DataGrid ctrl)
         {
-            //
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, ExecureCommand_ItemAddNew));
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, ExecuteCommand_ItemInsertNewBefore));
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, ExecuteCommand_ItemInsertNewAfter));
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, ExecuteCommand_ItemEdit));
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, ExecuteCommand_ItemsEdit));
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, ExecuteCommand_ItemsEnumerate));
-            //parentWindow.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, ExecuteCommand_ItemsDelete));
-            //
-            //
+            
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_SwitchToLearnMode, SwitchToLearnMode_Executed, SwitchToLearnMode_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_SwitchToNormalMode, SwitchToNormalMode_Executed, SwitchToNormalMode_CanExecute));
             //
             CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_ItemLearn, CommandItemLearn_Executed, CommandItemLearn_CanExecute));
             CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_Dlg001, CommandDlg001_Executed, CommandDlg001_CanExecute));
@@ -143,7 +139,7 @@ namespace LLA.GUI
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemAddNew, ExecureCommand_ItemAddNew));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewBefore, ExecuteCommand_ItemInsertNewBefore));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemInsertNewAfter, ExecuteCommand_ItemInsertNewAfter));
-            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, ExecuteCommand_ItemEdit));
+            ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemEdit, ExecuteCommand_ItemEdit, ItemEdit_CanExecute));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEdit, ExecuteCommand_ItemsEdit));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsEnumerate, ExecuteCommand_ItemsEnumerate));
             ctrl.CommandBindings.Add(new CommandBinding(WordsTable_Commands.ItemsDelete, ExecuteCommand_ItemsDelete));
@@ -402,6 +398,7 @@ namespace LLA.GUI
             {
                 JsonSerializer serializer = new JsonSerializer();
                 Words = (ObservableCollection<CWord>)serializer.Deserialize(file, typeof(ObservableCollection<CWord>));
+                AllItems = Words;
                 ctrl_WordsTable.ItemsSource = Words;
                 WorkingFile = fileName;
                 ParentWindow = Window.GetWindow(this);
@@ -540,9 +537,60 @@ namespace LLA.GUI
     }
 
 
+    public enum CtrlMode
+    {
+        Learning = 1,
+        Normal = 0
+    }
+
     // COMMANDS
     public partial class WordsTable
     {
+        public IEnumerable AllItems { get; set; }
+        private ObservableCollection<CWord> ItemsToLearn { get; set; }
+
+        
+
+        private void SwitchToLearnMode_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (AllItems == null) return;
+            ItemsToLearn = new ObservableCollection<CWord>();
+            foreach (var item in AllItems) if (item is CWord word && word.LearningSheduler == true) ItemsToLearn.Add(word);
+            //
+            DataGrid ctrl = ctrl_WordsTable;
+            ctrl.ItemsSource = ItemsToLearn;
+            foreach (var col in ctrl.Columns)
+            {
+                Object tag = DataGridTag.GetTag(col);
+                if (tag == null || !(tag is Boolean)) continue;
+                if ((Boolean)DataGridTag.GetTag(col)) col.Visibility = Visibility.Collapsed;
+            }
+            Mode = CtrlMode.Learning;
+        }
+
+        private void SwitchToLearnMode_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SwitchToNormalMode_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            ctrl.ItemsSource = AllItems;
+            foreach (var col in ctrl.Columns)
+            {
+                Object tag = DataGridTag.GetTag(col);
+                if (tag == null || !(tag is Boolean)) continue;
+                if ((Boolean)DataGridTag.GetTag(col)) col.Visibility = Visibility.Visible;
+            }
+            Mode = CtrlMode.Normal;
+        }
+
+        private void SwitchToNormalMode_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
         private void CommandDlg001_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -571,26 +619,18 @@ namespace LLA.GUI
             CWord selectedItem = ctrl.CurrentItem as CWord;
 
             if (selectedItem == null) return;
-            DataGrid dg = ctrl_WordsTable as DataGrid;
 
-            foreach(var col in dg.Columns)
-            {
-                Object tag = DataGridTag.GetTag(col);
-                if (tag == null || !(tag is Boolean)) continue;
-                if ((Boolean)DataGridTag.GetTag(col)) col.Visibility = Visibility.Collapsed;
-            }
-            
             KnowledgeTestDialog dialog = new KnowledgeTestDialog(selectedItem) { Owner = ParentWindow };
             if (dialog.ShowDialog() == true)
             {
-                //TODO treat results
-            }
-            foreach (var col in dg.Columns)
-            {
-                Object tag = DataGridTag.GetTag(col);
-                if (tag == null || !(tag is Boolean)) continue;
-                if ((Boolean)DataGridTag.GetTag(col)) col.Visibility = Visibility.Visible;
-            }
+                if (dialog.DialogState == EKnowledgeTestDialogState.ShowTest) return;
+                if (selectedItem.LearningUserPriority == null) selectedItem.LearningUserPriority = 0;
+
+                selectedItem.LearningUserPriority += dialog.DialogState == EKnowledgeTestDialogState.ShowTestResultWrong ? -1 : 1;
+
+
+
+            }            
         }
 
         // Command FileCreate
@@ -690,6 +730,12 @@ namespace LLA.GUI
             //TODO not implemented
             MessageBox.Show("Операция \"Редактирование нескольких елементов\" не реализована");
         }
+
+        private void ItemEdit_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = Mode == CtrlMode.Normal;
+        }
+        
 
         private void ExecuteCommand_ItemsEnumerate(object sender, ExecutedRoutedEventArgs e)
         {

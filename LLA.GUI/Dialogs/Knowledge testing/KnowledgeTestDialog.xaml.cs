@@ -543,14 +543,15 @@ namespace LLA.GUI.Dialogs
 
         private async void QuizCheckAnswer_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
             DialogState = String.Compare(UserAnswer.Trim(), CorrectAnswer.Trim(), StringComparison.InvariantCultureIgnoreCase) == 0
                 ? EKnowledgeTestDialogState.ShowTestResultCorrect : EKnowledgeTestDialogState.ShowTestResultWrong;
+            //this.DialogResult = true;
             SetDialogHeader();
         }
 
         async Task ShowAnswerResultAndClose(Window w)
         {
+            this.DialogResult = true;
             await Task.Delay(500);
             w.Close();
         }
