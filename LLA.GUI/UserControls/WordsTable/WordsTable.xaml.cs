@@ -568,54 +568,68 @@ namespace LLA.GUI
             if (ctrl.Items == null || ctrl.Items.Count == 0) return;
             List<CWord> words = new List<CWord>();
             foreach (var item in ctrl.Items) if (item is CWord word) words.Add(word);
-            words.ForEach(x => x.LearningSheduler = false);
+            words.ForEach(x => x.LearningSheduler = false );
 
-            Int32 learningSetMin = 25;
-            Int32 learningSetMax = 40;
-            Int32 itemsForTestMaxCountTotal = 6;
-            Double badItemsMin = 15.0;
-            Double badItemsMax = 25.0;
-            Double normItemsMin = 60.0;
-            Double normItemsMax = 70.0;
-            Double goodItemsMin = 10.0;
-            Double goodItemsMax = 20.0;
+            Int32 AttemptAfterWhichWordIsWeakKnown = 3;
+            Int32 AttemptAfterWhichWordIsWellKnown = 6;
+            Int32 AttemptAfterWhichWordIsSuccesfulyLearned = 10;
 
-            
-            List<CWord> itemsForTest = new List<CWord>();
+            Int32 UnknownWordsMinCountInLearningSet = 5;
+            Int32 UnknownWordsMaxCountInLearningSet = UnknownWordsMinCountInLearningSet + 5;
+            Int32 MaxSizeOfLearningSet = UnknownWordsMaxCountInLearningSet + 20;
 
-            while(itemsForTest.Count < itemsForTestMaxCountTotal && CountOfAvailableItems() > 0)
+            Int32 WordsInTest = 10;
+            Int32 UnknownWordsInTest = 2;
+            Int32 WellKnownWordsInTest = 1;
+
+            List<CWord> learningSet = words.Where(x => x.LearningSheduler == false && x.LearningUserPriority != null && x.LearningUserPriority <= AttemptAfterWhichWordIsWellKnown).ToList();
+            List<CWord> setOfNewWords = words.Where(x => x.LearningSheduler == false && x.LearningUserPriority == null).ToList();
+            List<CWord> setOfUnknownWords = learningSet.Where(x => x.LearningUserPriority <= AttemptAfterWhichWordIsWeakKnown).ToList();
+            List<CWord> setOfWeakKnownWords = learningSet.Where(x => x.LearningUserPriority > AttemptAfterWhichWordIsWeakKnown && x.LearningUserPriority <= AttemptAfterWhichWordIsWellKnown).ToList();
+            List<CWord> setOfWellKnownWords = words.Where(x => x.LearningSheduler == false && x.LearningUserPriority != null && x.LearningUserPriority > AttemptAfterWhichWordIsWellKnown && x.LearningUserPriority < AttemptAfterWhichWordIsSuccesfulyLearned).ToList();
+            List<CWord> wordsForTest = new List<CWord>();
+
+            Int32 freeSlotsInLearningSet = MaxSizeOfLearningSet - setOfWeakKnownWords.Count - setOfUnknownWords.Count;
+            Int32 rangeOfSlotsInUnknownWordsSet = UnknownWordsMaxCountInLearningSet - UnknownWordsMinCountInLearningSet;
+            Int32 freeSlotsInSetOfUnknownWords = Math.Min(UnknownWordsMinCountInLearningSet - setOfUnknownWords.Count, Math.Min(freeSlotsInLearningSet, rangeOfSlotsInUnknownWordsSet));
+
+            if(freeSlotsInSetOfUnknownWords > 0 && setOfNewWords.Count > 0)
             {
-                List<CWord> learningSet = words.Where(x => x.LearningUserPriority != null && x.LearningUserPriority <= 6).ToList();
-                List<CWord> setOfNewItems = words.Where(x => x.LearningUserPriority == null).ToList();
-                List<CWord> setOfBadItems = learningSet.Where(x => x.LearningUserPriority <= 3).ToList();
-                List<CWord> setOfNormItems = learningSet.Where(x => x.LearningUserPriority > 3 && x.LearningUserPriority <= 6).ToList();
-                List<CWord> setOfGoodItems = words.Where(x => x.LearningUserPriority != null && x.LearningUserPriority > 6).ToList();
-
-                Boolean learningSetIsTooSmall = learningSet.Count < learningSetMin;
-                Boolean learningSetIsTooBig = learningSet.Count > learningSetMax;
-                //
-                Boolean setOfBadItemsIsTooSmall = setOfBadItems.Count < (badItemsMin * 100.0 / setOfBadItems.Count);
-                Boolean setOfBadItemsIsTooBig = setOfBadItems.Count > (badItemsMax * 100.0 / setOfBadItems.Count);
-                //
-                Boolean setOfNormItemsIsTooSmall = setOfNormItems.Count < (normItemsMin * 100.0 / setOfNormItems.Count);
-                Boolean setOfNormItemsIsTooBig = setOfNormItems.Count > (normItemsMax * 100.0 / setOfNormItems.Count);
-                //
-                Boolean setOfGoodItemsIsTooSmall = setOfGoodItems.Count < (goodItemsMin * 100.0 / setOfGoodItems.Count);
-                Boolean setOfGoodItemsIsTooBig = setOfGoodItems.Count > (goodItemsMax * 100.0 / setOfGoodItems.Count);
-
-
-                Int32 itemsForTest_Good = 0;
-                Int32 itemsForTest_Norm = 0;
-                Int32 itemsForTest_Bad = 0;
-
-                if (learningSetIsTooSmall && setOfNewItems.Count > 0)
-                {
-
-                }
+                var newWords = setOfNewWords.OrderBy(x => x.CreatedAt).Take(UnknownWordsInTest).ToList();
+                newWords.ForEach(x => x.LearningUserPriority = 0);
+                setOfUnknownWords.AddRange(newWords);
             }
+            
+            Random rnd = new Random();
 
-            itemsForTest.ForEach(x => x.LearningSheduler = true);
-            Int32 CountOfAvailableItems() => words.Where(x => x.LearningUserPriority == null || x.LearningUserPriority < 10).Count();
+            setOfUnknownWords.ForEach(x => x.Random = GetRandomValue());
+            Stack<CWord> stackOfUnknownWords = new Stack<CWord>(setOfUnknownWords.OrderBy(x => x.Random));
+            setOfWellKnownWords.ForEach(x => x.Random = GetRandomValue());
+            Stack<CWord> stackOfWellKnownWords = new Stack<CWord>(setOfWellKnownWords.OrderBy(x => x.Random));
+            setOfWeakKnownWords.ForEach(x => x.Random = GetRandomValue());
+            Stack<CWord> stackOfWeakKnownWords = new Stack<CWord>(setOfWeakKnownWords.OrderBy(x => x.Random));
+
+            Int32 counter = 0;
+            while(counter++ < UnknownWordsInTest && stackOfUnknownWords.Count > 0) wordsForTest.Add(stackOfUnknownWords.Pop());
+            
+            counter = 0;
+            while(counter++ < WellKnownWordsInTest && stackOfWellKnownWords.Count > 0) wordsForTest.Add(stackOfWellKnownWords.Pop());
+
+            counter = 0;
+            while(counter++ < WordsInTest && stackOfWeakKnownWords.Count > 0) wordsForTest.Add(stackOfWeakKnownWords.Pop());
+            
+            
+            counter = wordsForTest.Count;
+            if(counter < WordsInTest)
+                while(counter++ < WordsInTest && stackOfUnknownWords.Count > 0) wordsForTest.Add(stackOfUnknownWords.Pop());
+
+            counter = wordsForTest.Count;
+            if(counter < WordsInTest)
+                while(counter++ < WordsInTest && stackOfWellKnownWords.Count > 0) wordsForTest.Add(stackOfWellKnownWords.Pop());
+
+            wordsForTest.ForEach(x => x.LearningSheduler = true);
+
+            Int32 GetRandomValue() => rnd.Next(1, 1001);
         }
 
         private void SelectNextItemsToLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -689,18 +703,8 @@ namespace LLA.GUI
         {
             if (AllItems == null) return;
             List<CWord> selectedItems = new List<CWord>();
-            ItemsToLearn = new ObservableCollection<CWord>();
-            Random rnd = new Random();
-            foreach (var item in AllItems)
-            {
-                if (item is CWord word && word.LearningSheduler == true)
-                {
-                    word.Random = rnd.Next(1, 1001);
-                    selectedItems.Add(word);
-                }
-            }
-            ItemsToLearn = new ObservableCollection<CWord>(selectedItems.OrderBy(x => x.Random).Take(5));
-
+            foreach(var item in AllItems) if(item is CWord word && word.LearningSheduler == true) selectedItems.Add(word);
+            ItemsToLearn = new ObservableCollection<CWord>(selectedItems.OrderBy(x => x.Random));
             //
             DataGrid ctrl = ctrl_WordsTable;
             ctrl.ItemsSource = ItemsToLearn;
@@ -772,7 +776,7 @@ namespace LLA.GUI
                 if (selectedItem.LearningUserPriority == null) selectedItem.LearningUserPriority = 0;
 
                 selectedItem.LearningUserPriority += dialog.DialogState == EKnowledgeTestDialogState.ShowTestResultWrong ? -1 : 1;
-                if (selectedItem.LearningUserPriority > 7) selectedItem.LearningSheduler = false;
+                //if (selectedItem.LearningUserPriority >= 10) selectedItem.LearningSheduler = false;
 
 
             }            
