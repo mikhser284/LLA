@@ -129,6 +129,12 @@ namespace LLA.GUI
             
             CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_SwitchToLearnMode, SwitchToLearnMode_Executed, SwitchToLearnMode_CanExecute));
             CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_SwitchToNormalMode, SwitchToNormalMode_Executed, SwitchToNormalMode_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.SelectNextItemsToLearn, SelectNextItemsToLearn_Executed, SelectNextItemsToLearn_CanExecute));
+
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.MarkAsItemsToLearn, MarkAsItemsToLearn_Executed, MarkAsItemsToLearn_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.MarkAsItemsNotToLearn, MarkAsItemsNotToLearn_Executed, MarkAsItemsNotToLearn_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.MarkNewItemsToLearn, MarkNewItemsToLearn_Executed, MarkNewItemsToLearn_CanExecute));
+            CommandBindings.Add(new CommandBinding(WordsTable_Commands.MarkWorstItemsToLearn, MarkWorstItemsToLearn_Executed, MarkWorstItemsToLearn_CanExecute));
             //
             CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_ItemLearn, CommandItemLearn_Executed, CommandItemLearn_CanExecute));
             CommandBindings.Add(new CommandBinding(WordsTable_Commands.Temp_Dlg001, CommandDlg001_Executed, CommandDlg001_CanExecute));
@@ -174,7 +180,13 @@ namespace LLA.GUI
             {
                 Header = "Учить",
                 Binding = new Binding(nameof(word.LearningSheduler)) { Mode = BindingMode.TwoWay}
-            };            
+            };
+
+            DataGridTextColumn random = new DataGridTextColumn
+            {
+                Header = "rnd",
+                Binding = new Binding(nameof(word.Random)) { Mode = BindingMode.TwoWay }
+            };
 
             DataGridTextColumn learningUserPriority = new DataGridTextColumn
             {
@@ -279,6 +291,7 @@ namespace LLA.GUI
 
             ctrl.Columns.Add(learningSheduler);
             ctrl.Columns.Add(learningUserPriority);
+            ctrl.Columns.Add(random);
             //
             ctrl.Columns.Add(lessonNumber);
             ctrl.Columns.Add(wordOrder);
@@ -549,13 +562,145 @@ namespace LLA.GUI
         public IEnumerable AllItems { get; set; }
         private ObservableCollection<CWord> ItemsToLearn { get; set; }
 
-        
+        private void SelectNextItemsToLearn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            if (ctrl.Items == null || ctrl.Items.Count == 0) return;
+            List<CWord> words = new List<CWord>();
+            foreach (var item in ctrl.Items) if (item is CWord word) words.Add(word);
+            words.ForEach(x => x.LearningSheduler = false);
+
+            Int32 learningSetMin = 25;
+            Int32 learningSetMax = 40;
+            Int32 itemsForTestMaxCountTotal = 6;
+            Double badItemsMin = 15.0;
+            Double badItemsMax = 25.0;
+            Double normItemsMin = 60.0;
+            Double normItemsMax = 70.0;
+            Double goodItemsMin = 10.0;
+            Double goodItemsMax = 20.0;
+
+            
+            List<CWord> itemsForTest = new List<CWord>();
+
+            while(itemsForTest.Count < itemsForTestMaxCountTotal && CountOfAvailableItems() > 0)
+            {
+                List<CWord> learningSet = words.Where(x => x.LearningUserPriority != null && x.LearningUserPriority <= 6).ToList();
+                List<CWord> setOfNewItems = words.Where(x => x.LearningUserPriority == null).ToList();
+                List<CWord> setOfBadItems = learningSet.Where(x => x.LearningUserPriority <= 3).ToList();
+                List<CWord> setOfNormItems = learningSet.Where(x => x.LearningUserPriority > 3 && x.LearningUserPriority <= 6).ToList();
+                List<CWord> setOfGoodItems = words.Where(x => x.LearningUserPriority != null && x.LearningUserPriority > 6).ToList();
+
+                Boolean learningSetIsTooSmall = learningSet.Count < learningSetMin;
+                Boolean learningSetIsTooBig = learningSet.Count > learningSetMax;
+                //
+                Boolean setOfBadItemsIsTooSmall = setOfBadItems.Count < (badItemsMin * 100.0 / setOfBadItems.Count);
+                Boolean setOfBadItemsIsTooBig = setOfBadItems.Count > (badItemsMax * 100.0 / setOfBadItems.Count);
+                //
+                Boolean setOfNormItemsIsTooSmall = setOfNormItems.Count < (normItemsMin * 100.0 / setOfNormItems.Count);
+                Boolean setOfNormItemsIsTooBig = setOfNormItems.Count > (normItemsMax * 100.0 / setOfNormItems.Count);
+                //
+                Boolean setOfGoodItemsIsTooSmall = setOfGoodItems.Count < (goodItemsMin * 100.0 / setOfGoodItems.Count);
+                Boolean setOfGoodItemsIsTooBig = setOfGoodItems.Count > (goodItemsMax * 100.0 / setOfGoodItems.Count);
+
+
+                Int32 itemsForTest_Good = 0;
+                Int32 itemsForTest_Norm = 0;
+                Int32 itemsForTest_Bad = 0;
+
+                if (learningSetIsTooSmall && setOfNewItems.Count > 0)
+                {
+
+                }
+            }
+
+            itemsForTest.ForEach(x => x.LearningSheduler = true);
+            Int32 CountOfAvailableItems() => words.Where(x => x.LearningUserPriority == null || x.LearningUserPriority < 10).Count();
+        }
+
+        private void SelectNextItemsToLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MarkAsItemsToLearn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            if (ctrl.SelectedItems == null || ctrl.SelectedItems.Count == 0) return;
+            List<CWord> selectedItems = new List<CWord>();
+            foreach (var item in ctrl.SelectedItems) selectedItems.Add((CWord)item);
+
+            foreach (var item in selectedItems) item.LearningSheduler = true;
+        }
+
+        private void MarkAsItemsToLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MarkAsItemsNotToLearn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            if (ctrl.SelectedItems == null || ctrl.SelectedItems.Count == 0) return;
+            List<CWord> selectedItems = new List<CWord>();
+            foreach (var item in ctrl.SelectedItems) selectedItems.Add((CWord)item);
+
+            foreach (var item in selectedItems) item.LearningSheduler = false;
+        }
+
+        private void MarkNewItemsToLearn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            if (ctrl.Items == null || ctrl.Items.Count == 0) return;
+            List<CWord> words = new List<CWord>();
+            foreach (var item in ctrl.Items) if (item is CWord word) words.Add(word);
+            words.ForEach(x => x.LearningSheduler = false);
+
+            words.Where(x => x.LearningUserPriority == null).OrderBy(x => x.CreatedAt).Take(5).ForEach(x => x.LearningSheduler = true);
+        }
+
+        private void MarkNewItemsToLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MarkWorstItemsToLearn_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            DataGrid ctrl = ctrl_WordsTable;
+            if (ctrl.Items == null || ctrl.Items.Count == 0) return;
+            List<CWord> words = new List<CWord>();
+            foreach (var item in ctrl.Items) if (item is CWord word) words.Add(word);
+            words.ForEach(x => x.LearningSheduler = false);
+
+            words.Where(x => x.LearningUserPriority != null && x.LearningUserPriority < 8).OrderBy(x => x.LearningUserPriority).Take(5).ForEach(x => x.LearningSheduler = true);
+        }
+
+        private void MarkWorstItemsToLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void MarkAsItemsNotToLearn_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
 
         private void SwitchToLearnMode_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (AllItems == null) return;
+            List<CWord> selectedItems = new List<CWord>();
             ItemsToLearn = new ObservableCollection<CWord>();
-            foreach (var item in AllItems) if (item is CWord word && word.LearningSheduler == true) ItemsToLearn.Add(word);
+            Random rnd = new Random();
+            foreach (var item in AllItems)
+            {
+                if (item is CWord word && word.LearningSheduler == true)
+                {
+                    word.Random = rnd.Next(1, 1001);
+                    selectedItems.Add(word);
+                }
+            }
+            ItemsToLearn = new ObservableCollection<CWord>(selectedItems.OrderBy(x => x.Random).Take(5));
+
             //
             DataGrid ctrl = ctrl_WordsTable;
             ctrl.ItemsSource = ItemsToLearn;
@@ -627,7 +772,7 @@ namespace LLA.GUI
                 if (selectedItem.LearningUserPriority == null) selectedItem.LearningUserPriority = 0;
 
                 selectedItem.LearningUserPriority += dialog.DialogState == EKnowledgeTestDialogState.ShowTestResultWrong ? -1 : 1;
-
+                if (selectedItem.LearningUserPriority > 7) selectedItem.LearningSheduler = false;
 
 
             }            
@@ -742,7 +887,7 @@ namespace LLA.GUI
             DataGrid ctrl = ctrl_WordsTable;
 
             Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0 && selectedIndex <= Words.Count - 1)
+            if (selectedIndex >= 0 && selectedIndex <= Words.Count)
             {
                 Int32 itemsSelected = ctrl_WordsTable.SelectedItems.Count;
                 Int32 indexOfFirstItem = selectedIndex;

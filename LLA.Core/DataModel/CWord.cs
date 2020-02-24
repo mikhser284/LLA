@@ -35,6 +35,17 @@ namespace LLA.Core
         private Guid?                   _learningRand;
         private Int32?                  _learningUserPriority;
 
+        private Int32?                  _random;
+        public Int32? Random
+        {
+            get { return _random; }
+            set
+            {
+                _random = value;
+                OnPropChanged(nameof(Random));
+            }
+        }
+
 
         [JsonProperty("19", Order = 19)]
         public Boolean LearningSheduler
