@@ -11,43 +11,43 @@ namespace LLA.GUI
             = new RoutedUICommand("Переключится в режим изучения"
             , nameof(Temp_SwitchToLearnMode)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F9) });
+            , new InputGestureCollection() { new KeyGesture(Key.F5) });
 
         public static readonly RoutedCommand Temp_SwitchToNormalMode
             = new RoutedUICommand("Переключится в обычный реижим"
             , nameof(Temp_SwitchToNormalMode)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F8) });
+            , new InputGestureCollection() { new KeyGesture(Key.F6) });
 
         public static readonly RoutedCommand SelectNextItemsToLearn
             = new RoutedUICommand("Выбрать следующие елементы подлежащие изучению"
             , nameof(SelectNextItemsToLearn)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F1) });
+            , new InputGestureCollection() { new KeyGesture(Key.F4) });
 
         public static readonly RoutedCommand MarkAsItemsToLearn
             = new RoutedUICommand("Пометить как слова для изучения"
             , nameof(MarkAsItemsToLearn)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F5) });
+            , new InputGestureCollection() { new KeyGesture(Key.F12) });
 
         public static readonly RoutedCommand MarkNewItemsToLearn
             = new RoutedUICommand("Пометить новые слова для изучения"
             , nameof(MarkNewItemsToLearn)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F7) });
+            , new InputGestureCollection() { new KeyGesture(Key.F12) });
 
         public static readonly RoutedCommand MarkWorstItemsToLearn
             = new RoutedUICommand("Пометить слова для изучения с самым худшим результатом"
             , nameof(MarkWorstItemsToLearn)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F6) });
+            , new InputGestureCollection() { new KeyGesture(Key.F12) });
 
         public static readonly RoutedCommand MarkAsItemsNotToLearn
             = new RoutedUICommand("Снять пометку к изучению"
             , nameof(MarkAsItemsNotToLearn)
             , typeof(WordsTable_Commands)
-            , new InputGestureCollection() { new KeyGesture(Key.F4) });
+            , new InputGestureCollection() { new KeyGesture(Key.F12) });
 
         public static readonly RoutedCommand Temp_Dlg001
             = new RoutedUICommand("Диалог 001"
