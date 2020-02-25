@@ -579,7 +579,7 @@ namespace LLA.GUI
             Int32 MaxSizeOfLearningSet = UnknownWordsMaxCountInLearningSet + 20;
 
             Int32 WordsInTest = 10;
-            Int32 UnknownWordsInTest = 2;
+            Int32 UnknownWordsInTest = 3;
             Int32 WellKnownWordsInTest = 1;
 
             List<CWord> learningSet = words.Where(x => x.LearningSheduler == false && x.LearningUserPriority != null && x.LearningUserPriority <= AttemptAfterWhichWordIsWellKnown).ToList();
@@ -891,7 +891,7 @@ namespace LLA.GUI
             DataGrid ctrl = ctrl_WordsTable;
 
             Int32 selectedIndex = ctrl.SelectedIndex;
-            if (selectedIndex >= 0 && selectedIndex <= Words.Count)
+            if (selectedIndex >= 0 && selectedIndex < Words.Count)
             {
                 Int32 itemsSelected = ctrl_WordsTable.SelectedItems.Count;
                 Int32 indexOfFirstItem = selectedIndex;
